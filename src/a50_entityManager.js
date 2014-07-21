@@ -2138,12 +2138,12 @@ var EntityManager = (function () {
         var serializerFn = getSerializerFn(stype);
         var unmapped = {};
 
-        readedAssociations = readedAssociations || [];
+        var internalReadedAssociations = readedAssociations.slice(0);
         if (readedAssociations.indexOf(structObj) > -1) {
             options.isIgnored = true;
             return;
         }
-        readedAssociations.push(structObj);
+        internalReadedAssociations.push(structObj);
 
         stype.dataProperties.forEach(function (dp) {
             if (dp.isComplexProperty) {
@@ -2173,13 +2173,13 @@ var EntityManager = (function () {
             if (options.isIgnored)
                 return;
             if (dp.isScalar) {
-                var child = structObj.getProperty(dp.name);
-                if (child !== null) {
-                    if (child.entityAspect.entityState.isAdded()) {
-                        if (readedAssociations.indexOf(child) == -1) {
-                            var entity = unwrapInstance(child, transformFn, { readedAssociations: readedAssociations, isChildren: true, isIgnored: false });
+                var parent = structObj.getProperty(dp.name);
+                if (parent !== null) {
+                    if (parent.entityAspect.entityState.isAdded()) {
+                        if (internalReadedAssociations.indexOf(parent) == -1) {
+                            var entity = unwrapInstance(parent, transformFn, { readedAssociations: internalReadedAssociations, isChildren: true, isIgnored: false });
                             entity.__metadata = {
-                                type: child.entityType.namespace + "." + child.entityType.shortName
+                                type: parent.entityType.namespace + "." + parent.entityType.shortName
                             };
                             rawObject[dp.nameOnServer] = entity;
                         }
@@ -2190,20 +2190,20 @@ var EntityManager = (function () {
                     else {
                         rawObject[dp.nameOnServer] = {
                             __deferred: {
-                                uri: child.entityAspect.extraMetadata.uri
+                                uri: parent.entityAspect.extraMetadata.uri
                             }
                         };
                     }
                 }
             } else {
-                complexObjs = structObj.getProperty(dp.name);
+                var children = structObj.getProperty(dp.name);
                 rawObject[dp.nameOnServer] = [];
 
-                complexObjs.map(function (child) {
+                children.map(function (child) {
                     if (child !== null) {
                         if (child.entityAspect.entityState.isAdded()) {
-                            if (readedAssociations.indexOf(child) == -1) {
-                                var entity = unwrapInstance(child, transformFn, { readedAssociations: readedAssociations, isChildren: true, isIgnored: false });
+                            if (internalReadedAssociations.indexOf(child) == -1) {
+                                var entity = unwrapInstance(child, transformFn, { readedAssociations: internalReadedAssociations, isChildren: true, isIgnored: false });
                                 entity.__metadata = {
                                     type: child.entityType.namespace + "." + child.entityType.shortName
                                 };
@@ -2224,10 +2224,10 @@ var EntityManager = (function () {
             }
         });
 
-        if (!__isEmpty(unmapped)) {
+        if (!__isEmpty(unmapped))
             rawObject.__unmapped = unmapped;
-        }
-
+        if (!options.isIgnored)
+            internalReadedAssociations.map(function (x) { readedAssociations.push(x); });
         return rawObject;
     }
 

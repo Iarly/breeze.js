@@ -43,10 +43,10 @@ var EntityAspect = (function () {
         this.originalValues = {};
         this.hasValidationErrors = false;
         this._validationErrors = {};
-        
+
         // Uncomment when we implement entityAspect.isNavigationPropertyLoaded method
         // this._loadedNavPropMap = {};
-        
+
         this.validationErrorsChanged = new Event("validationErrorsChanged", this);
         this.propertyChanged = new Event("propertyChanged", this);
         // in case this is the NULL entityAspect. - used with ComplexAspects that have no parent.
@@ -57,7 +57,7 @@ var EntityAspect = (function () {
         if (entity != null) {
             entity.entityAspect = this;
             // entityType should already be on the entity from 'watch'    
-            var entityType = entity.entityType || entity._$entityType; 
+            var entityType = entity.entityType || entity._$entityType;
             if (!entityType) {
                 var typeName = entity.prototype._$typeName;
                 if (!typeName) {
@@ -76,7 +76,7 @@ var EntityAspect = (function () {
         this.inseredLinks = [];
         this.removedLinks = [];
     };
-  
+
     proto.insertLink = function (childEntity, np) {
         var removedLink = __arrayFirst(this.removedLinks, function (link) {
             return link.entity === childEntity && (link.np == np || link.np == np.inverse);
@@ -269,7 +269,7 @@ var EntityAspect = (function () {
         var entityManager = this.entityManager;
         if (entityManager) {
             // we do not want PropertyChange or EntityChange events to occur here
-                __using(entityManager, "isRejectingChanges", true, function () {
+            __using(entityManager, "isRejectingChanges", true, function () {
                 rejectChangesCore(entity);
             });
             if (this.entityState.isAdded()) {
@@ -319,7 +319,7 @@ var EntityAspect = (function () {
             // The 'order' entity will now be in an 'Unchanged' state with any changes committed.
     @method setUnchanged
     **/
-    proto.setUnchanged = function () 
+    proto.setUnchanged = function () {
         checkStateChange(this);
         this.resetLinks();
         clearOriginalValues(this.entity);
@@ -455,7 +455,7 @@ var EntityAspect = (function () {
     //Marks this navigationProperty on this entity as already having been loaded.
     //@example
     //        emp.entityAspect.markAsLoaded("Orders");
-            
+
     //@method markAsLoaded
     //@async
     //@param navigationProperty {NavigationProperty|String} The NavigationProperty or name of NavigationProperty to 'load'.   
@@ -498,7 +498,7 @@ var EntityAspect = (function () {
         var stype = target.entityType || target.complexType;
         var aspect = target.entityAspect || target.complexAspect;
         var entityAspect = target.entityAspect || target.complexAspect.getEntityAspect();
-            
+
         stype.getProperties().forEach(function (p) {
             var value = target.getProperty(p.name);
             var propName = aspect.getPropertyPath(p.name);
@@ -514,7 +514,7 @@ var EntityAspect = (function () {
                 }
             }
         });
-            
+
 
         // then entity level
         stype.validators.forEach(function (validator) {
@@ -522,7 +522,7 @@ var EntityAspect = (function () {
         });
         return ok;
     }
-    
+
 
     /**
     Performs validation on a specific property of this entity, any errors encountered during the validation are available via the 
@@ -557,7 +557,7 @@ var EntityAspect = (function () {
             context.property = property;
             context.propertyName = property.name;
         }
-            
+
         return this._validateProperty(value, context);
     };
 
@@ -613,7 +613,7 @@ var EntityAspect = (function () {
     **/
     proto.removeValidationError = function (validationErrorOrKey) {
         assertParam(validationErrorOrKey, "validationErrorOrKey").isString().or().isInstanceOf(ValidationError).or().isInstanceOf(Validator).check();
-        
+
         var key = (typeof (validationErrorOrKey) === "string") ? validationErrorOrKey : validationErrorOrKey.key;
         this._processValidationOpAndPublish(function (that) {
             that._removeValidationError(key);
@@ -636,7 +636,7 @@ var EntityAspect = (function () {
         });
     };
 
-   
+
 
     // returns null for np's that do not have a parentKey
     proto.getParentKey = function (navigationProperty) {
@@ -676,7 +676,7 @@ var EntityAspect = (function () {
     // internal methods
 
     proto._detach = function () {
-            
+
         this.entityGroup = null;
         this.entityManager = null;
         this.entityState = EntityState.Detached;
@@ -686,7 +686,7 @@ var EntityAspect = (function () {
         this.validationErrorsChanged.clear();
         this.propertyChanged.clear();
     };
-    
+
 
     // called from defaultInterceptor.
     proto._validateProperty = function (value, context) {
@@ -711,7 +711,7 @@ var EntityAspect = (function () {
                     this.validationErrorsChanged.publish(this._pendingValidationResult);
                     // this might be a detached entity hence the guard below.
                     this.entityManager && this.entityManager.validationErrorsChanged.publish(this._pendingValidationResult);
-                    
+
                 }
             } finally {
                 this._pendingValidationResult = undefined;
@@ -792,7 +792,7 @@ var EntityAspect = (function () {
             if (property && !property.isNullable) {
                 entity.entityAspect.setDetached();
             } else {
-            entity.setProperty(np.name, null);
+                entity.setProperty(np.name, null);
             }
         } else {
             // relatedEntity was detached.
@@ -803,21 +803,21 @@ var EntityAspect = (function () {
                 entity.entityAspect.setDetached();
             }
             else {
-            // need to clear child np without clearing child fk or changing the entityState of the child
-            var em = entity.entityAspect.entityManager;
+                // need to clear child np without clearing child fk or changing the entityState of the child
+                var em = entity.entityAspect.entityManager;
 
-            var fkNames = np.foreignKeyNames;
-            if (fkNames) {
-                var fkVals = fkNames.map(function (fkName) {
-                    return entity.getProperty(fkName);
-                });
-            }
-            entity.setProperty(np.name, null);
-            if (fkNames) {
-                fkNames.forEach(function (fkName, i) {
-                    entity.setProperty(fkName, fkVals[i])
-                });
-            }
+                var fkNames = np.foreignKeyNames;
+                if (fkNames) {
+                    var fkVals = fkNames.map(function (fkName) {
+                        return entity.getProperty(fkName);
+                    });
+                }
+                entity.setProperty(np.name, null);
+                if (fkNames) {
+                    fkNames.forEach(function (fkName, i) {
+                        entity.setProperty(fkName, fkVals[i])
+                    });
+                }
             }
 
         }
@@ -840,7 +840,7 @@ var EntityAspect = (function () {
 })();
 
 var ComplexAspect = (function () {
-        
+
     /**
     An ComplexAspect instance is associated with every complex object instance and is accessed via the complex object's 'complexAspect' property. 
      
@@ -902,7 +902,7 @@ var ComplexAspect = (function () {
     __readOnly__
     @property complexObject {Entity} 
     **/
-        
+
     /**
     The parent object that to which this aspect belongs; this will either be an entity or another complex object.
 
@@ -916,7 +916,7 @@ var ComplexAspect = (function () {
     __readOnly__
     @property parentProperty {DataProperty}
     **/
-        
+
     /**
     The 'original values' of this complex object where they are different from the 'current values'. 
     This is a map where the key is a property name and the value is the 'original value' of the property.
@@ -924,7 +924,7 @@ var ComplexAspect = (function () {
     __readOnly__
     @property originalValues {Object}
     **/
-    
+
     /**
     Returns the EntityAspect for the top level entity tht contains this complex object.
 
