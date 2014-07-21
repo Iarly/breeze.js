@@ -1,7 +1,7 @@
 ﻿/**
 @module breeze   
 **/
-    
+
 var EntityKey = (function () {
 
     var ENTITY_KEY_DELIMITER = ":::";
@@ -11,7 +11,7 @@ var EntityKey = (function () {
 
     @class EntityKey
     **/
-        
+
     /** 
     Constructs a new EntityKey.  Each entity within an EntityManager will have a unique EntityKey. 
     @example
@@ -38,11 +38,11 @@ var EntityKey = (function () {
         if (subtypes.length > 1) {
             this._subtypes = subtypes.filter(function (st) { return st.isAbstract === false; });
         }
-       
+
         if (!Array.isArray(keyValues)) {
             keyValues = __arraySlice(arguments, 1);
         }
-        
+
         this.entityType = entityType;
         entityType.keyProperties.forEach(function (kp, i) {
             // insure that guid keys are comparable.
@@ -50,22 +50,22 @@ var EntityKey = (function () {
                 keyValues[i] = keyValues[i] && keyValues[i].toLowerCase();
             }
         });
-        
+
         this.values = keyValues;
-        this._keyInGroup = createKeyString(keyValues);        
+        this._keyInGroup = createKeyString(keyValues);
 
     };
-    
+
     ctor._$typeName = "EntityKey";
     var proto = ctor.prototype;
-    
+
     /**
     The 'EntityType' that this is a key for. 
 
     __readOnly__
     @property entityType {EntityType} 
     **/
-    
+
     /**
     An array of the values for this key. This will usually only have a single element, unless the entity type has a multipart key.
 
@@ -111,7 +111,10 @@ var EntityKey = (function () {
     @method toString
     */
     proto.toString = function () {
-        return this.entityType.name + '-' + this._keyInGroup;
+        var baseEntityType = this.entityType;
+        while (baseEntityType.baseType)
+            baseEntityType = baseEntityType.baseEntityType;
+        return baseEntityType.name + '-' + this._keyInGroup;
     };
 
     /**

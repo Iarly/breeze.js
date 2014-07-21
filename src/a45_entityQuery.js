@@ -846,7 +846,7 @@ var EntityQuery = (function () {
 
         var qoText = toQueryOptionsString(queryOptions);
 
-        if (this.entityType.baseEntityType) {
+        if (this.entityType && this.entityType.baseEntityType) {
             return this.resourceName + '/' + this.entityType.namespace
                 + '.' + this.entityType.shortName + qoText;
         }
