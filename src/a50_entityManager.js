@@ -53,7 +53,7 @@ var EntityManager = (function () {
     @param [config.validationOptions=ValidationOptions.defaultInstance] {ValidationOptions}
     @param [config.keyGeneratorCtor] {Function}
     **/
-    var ctor = function(config) {
+    var ctor = function (config) {
 
         if (arguments.length > 1) {
             throw new Error("The EntityManager ctor has a single optional argument that is either a 'serviceName' or a configuration object.");
@@ -351,7 +351,7 @@ var EntityManager = (function () {
         
         var exportBundle = exportEntityGroups(this, entities);
         var json = __extend( {}, exportBundle, ["tempKeys", "entityGroupMap"]);
-
+       
         if (includeMetadata) {
             json = __extend(json, this, ["dataService", "saveOptions", "queryOptions", "validationOptions"]);
             json.metadataStore = this.metadataStore.exportMetadata();
@@ -433,14 +433,14 @@ var EntityManager = (function () {
         });
         var entitiesToLink = [];
         config.tempKeyMap = tempKeyMap;
-        __wrapExecution(function() {
+        __wrapExecution(function () {
             that._pendingPubs = [];
-        }, function(state) {
-            that._pendingPubs.forEach(function(fn) { fn(); });
+        }, function (state) {
+            that._pendingPubs.forEach(function (fn) { fn(); });
             that._pendingPubs = null;
             that._hasChangesAction && that._hasChangesAction();
         }, function () {
-            __objectForEach(json.entityGroupMap, function(entityTypeName, jsonGroup) {
+            __objectForEach(json.entityGroupMap, function (entityTypeName, jsonGroup) {
                 var entityType = that.metadataStore._getEntityType(entityTypeName, true);
                 var targetEntityGroup = findOrCreateEntityGroup(that, entityType);
                 var entities = importEntityGroup(targetEntityGroup, jsonGroup, config);
@@ -746,7 +746,7 @@ var EntityManager = (function () {
         var queryOptions = QueryOptions.resolve([ query.queryOptions, this.queryOptions, QueryOptions.defaultInstance]);
         var dataService = DataService.resolve([ query.dataService, this.dataService]);
 
-        if ( (!dataService.hasServerMetadata ) || this.metadataStore.hasMetadataFor(dataService.serviceName)) {
+        if ((!dataService.hasServerMetadata) || this.metadataStore.hasMetadataFor(dataService.serviceName)) {
             promise = executeQueryCore(this, query, queryOptions, dataService);
         } else {
             var that = this;
@@ -781,7 +781,7 @@ var EntityManager = (function () {
             });
     @method executeQueryLocally
     @param query {EntityQuery}  The {{#crossLink "EntityQuery"}}{{/crossLink}} to execute.
-    @return  {Array of Entity}  Array of entities from cache that satisfy the query
+    @return  {Array of Entity}  Array of Entities
     **/
     proto.executeQueryLocally = function (query) {
         assertParam(query, "query").isInstanceOf(EntityQuery).check();
@@ -794,11 +794,11 @@ var EntityManager = (function () {
         var filterFunc = query._toFilterFunction(entityType);
 
         if (filterFunc) {
-            var newFilterFunc = function(entity) {
+            var newFilterFunc = function (entity) {
                 return entity && (!entity.entityAspect.entityState.isDeleted()) && filterFunc(entity);
             };
         } else {
-            var newFilterFunc = function(entity) {
+            var newFilterFunc = function (entity) {
                 return entity && (!entity.entityAspect.entityState.isDeleted());
             };
         }
@@ -823,7 +823,7 @@ var EntityManager = (function () {
         var selectClause = query.selectClause;
         if (selectClause) {
             var selectFn = selectClause.toFunction();
-            result = result.map(function(e) {
+            result = result.map(function (e) {
                 return selectFn(e);
             });
         }
@@ -902,7 +902,7 @@ var EntityManager = (function () {
         assertParam(saveOptions, "saveOptions").isInstanceOf(SaveOptions).isOptional().check();
         assertParam(callback, "callback").isFunction().isOptional().check();
         assertParam(errorCallback, "errorCallback").isFunction().isOptional().check();
-
+            
         saveOptions = saveOptions || this.saveOptions || SaveOptions.defaultInstance;
         var isFullSave = entities == null;
         var entitiesToSave = getEntitiesToSave(this, entities);
@@ -939,7 +939,7 @@ var EntityManager = (function () {
                 return Q.reject(valError);
             }
         }
-           
+            
         var dataService = DataService.resolve([saveOptions.dataService, this.dataService]);
         var saveContext = {
             entityManager: this,
@@ -952,8 +952,8 @@ var EntityManager = (function () {
         // are referenced are also in the partial save group
 
         var saveBundle = { entities: entitiesToSave, saveOptions: saveOptions };
-
         
+            
         try { // Guard against exception thrown in dataservice adapter before it goes async
             updateConcurrencyProperties(entitiesToSave);
             return dataService.adapterInstance.saveChanges(saveContext, saveBundle)
@@ -964,7 +964,7 @@ var EntityManager = (function () {
             if (errorCallback) errorCallback(err);
             return Q.reject(err);
         }
-
+            
         function saveSuccess(saveResult) {
             var em = saveContext.entityManager;
             var savedEntities = saveResult.entities = saveContext.processSavedEntities(saveResult);
@@ -993,12 +993,12 @@ var EntityManager = (function () {
                 var mappingContext = new MappingContext({
                     query: null, // tells visitAndMerge this is a save instead of a query
                     entityManager: em,
-                    mergeOptions: { mergeStrategy: MergeStrategy.OverwriteChanges },
-                    dataService: dataService
-                });
+                mergeOptions: { mergeStrategy: MergeStrategy.OverwriteChanges },
+                dataService: dataService
+            });
 
                 // The visitAndMerge operation has been optimized so that we do not actually perform a merge if the 
-                // the save operation did not actually return the entity - i.e. during OData and Mongo updates and deletes.
+            // the save operation did not actually return the entity - i.e. during OData and Mongo updates and deletes.
                 savedEntities = mappingContext.visitAndMerge(savedEntities, { nodeType: "root" });
             });
             
@@ -1029,11 +1029,12 @@ var EntityManager = (function () {
         });
     }
 
+
     function createEntityErrors(entities) {
         var entityErrors = [];
         entities.forEach(function (entity) {
-            __objectForEach(entity.entityAspect._validationErrors, function (key, ve)  {
-                var cfg = __extend( { 
+            __objectForEach(entity.entityAspect._validationErrors, function (key, ve) {
+                var cfg = __extend({
                     entity: entity,
                     errorName: ve.validator.name 
                 }, ve, ["errorMessage", "propertyName", "isServerError"]);
@@ -1083,7 +1084,7 @@ var EntityManager = (function () {
         if (arr1.length !== arr2.length) {
             return false;
         }
-        for (var i=0, c=arr1.length; i<c; i++) {
+        for (var i = 0, c = arr1.length; i < c; i++) {
             if (arr1[i] !== arr2[i]) return false;
         }
         return true;
@@ -1336,10 +1337,10 @@ var EntityManager = (function () {
         
         
     // backdoor the "really" check for changes.
-    proto._hasChangesCore = function(entityTypes) {
+    proto._hasChangesCore = function (entityTypes) {
         entityTypes = checkEntityTypes(this, entityTypes);
         var entityGroups = getEntityGroups(this, entityTypes);
-        return entityGroups.some(function(eg) {
+        return entityGroups.some(function (eg) {
             return eg.hasChanges();
         });
     };
@@ -1391,7 +1392,7 @@ var EntityManager = (function () {
         var changes = getEntitiesCore(this, null, entityStates);
         // next line stops individual reject changes from each calling _hasChangesCore
         this._hasChanges = false;
-        changes.forEach(function(e) {
+        changes.forEach(function (e) {
             e.entityAspect.rejectChanges();
         });
         this.hasChangesChanged.publish({ entityManager: this, hasChanges: false });
@@ -1647,18 +1648,18 @@ var EntityManager = (function () {
         
     function createEntityKey(em, args) {
         try {
-            if (args[0] instanceof EntityKey) {
-                return { entityKey: args[0], remainingArgs: __arraySlice(args, 1) };
+        if (args[0] instanceof EntityKey) {
+            return { entityKey: args[0], remainingArgs: __arraySlice(args, 1) };
             } else if (args.length >= 2) {
                 var entityType = (typeof args[0] === 'string') ? em.metadataStore._getEntityType(args[0], false) : args[0];
-                return { entityKey: new EntityKey(entityType, args[1]), remainingArgs: __arraySlice(args, 2) };
-            }
+            return { entityKey: new EntityKey(entityType, args[1]), remainingArgs: __arraySlice(args, 2) };
+        }
         } catch (e) {/* throw below */}
         throw new Error("Must supply an EntityKey OR an EntityType name or EntityType followed by a key value or an array of key values.");
-    }      
+    }       
         
     function markIsBeingSaved(entities, flag) {
-        entities.forEach(function(entity) {
+        entities.forEach(function (entity) {
             entity.entityAspect.isBeingSaved = flag;
         });
     }
@@ -1737,19 +1738,18 @@ var EntityManager = (function () {
             var entityState = aspect.entityState;
             newAspect = {
                 tempNavPropNames: exportTempKeyInfo(aspect, tempKeys),
-                entityState: entityState.name,
+                entityState: entityState.name
             };
-            if (aspect.extraMetadata) {
-                newAspect.extraMetadata = aspect.extraMetadata;
-            }
             if (entityState.isModified() || entityState.isDeleted()) {
                 newAspect.originalValuesMap = aspect.originalValues;
             }
+            if (so.entityAspect.extraMetadata)
+                newAspect.extraMetadata = so.entityAspect.extraMetadata;
             result.entityAspect = newAspect;
         } else {
             aspect = so.complexAspect;
             newAspect = {};
-            if ( aspect.originalValues && !__isEmpty(aspect.originalValues)) {
+            if (aspect.originalValues && !__isEmpty(aspect.originalValues)) {
                 newAspect.originalValuesMap = aspect.originalValues;
             }
             
@@ -1841,22 +1841,24 @@ var EntityManager = (function () {
                         });
                     }
                 }
+                if (newAspect.extraMetadata)
+                    targetEntity.entityAspect.extraMetadata = newAspect.extraMetadata;
                 // Now performed in attachEntity
                 // entityType._initializeInstance(targetEntity);
                 targetEntity = entityGroup.attachEntity(targetEntity, entityState);
-                entityChanged.publish({ entityAction: EntityAction.AttachOnImport, entity: targetEntity });
-                if (!entityState.isUnchanged()) {
-                    em._notifyStateChange(targetEntity, true);
-                }
-                
-            }
+                    entityChanged.publish({ entityAction: EntityAction.AttachOnImport, entity: targetEntity });
+                    if (!entityState.isUnchanged()) {
+                        em._notifyStateChange(targetEntity, true);
+                    }
 
-            entitiesToLink.push(targetEntity);
+                }
+
+                entitiesToLink.push(targetEntity);
         });
         return entitiesToLink;
     }
 
-    function promiseWithCallbacks(promise, callback, errorCallback) {
+     function promiseWithCallbacks(promise, callback, errorCallback) {
 
         promise = promise.then(function (data) {
             if (callback) callback(data);
@@ -2118,16 +2120,31 @@ var EntityManager = (function () {
     proto.helper = {
         unwrapInstance: unwrapInstance,
         unwrapOriginalValues: unwrapOriginalValues,
-        unwrapChangedValues: unwrapChangedValues
+        unwrapChangedValues: unwrapChangedValues,
     };
     
    
-    function unwrapInstance(structObj, transformFn) {
+    function unwrapInstance(structObj, transformFn, options) {
         
+        options = options || { readedAssociations: [], isChildren: false, isIgnored: false };
+        var readedAssociations =
+            options.readedAssociations = options.readedAssociations || [];
+        var isChildren =
+            options.isChildren = options.isChildren || false;
+        var isIgnored =
+            options.isIgnored = options.isIgnored || false;
         var rawObject = {};
         var stype = structObj.entityType || structObj.complexType;
         var serializerFn = getSerializerFn(stype);
         var unmapped = {};
+
+        readedAssociations = readedAssociations || [];
+        if (readedAssociations.indexOf(structObj) > -1) {
+            options.isIgnored = true;
+            return;
+        }
+        readedAssociations.push(structObj);
+
         stype.dataProperties.forEach(function (dp) {
             if (dp.isComplexProperty) {
                 rawObject[dp.nameOnServer] = __map(structObj.getProperty(dp.name), function (co) {
@@ -2147,10 +2164,66 @@ var EntityManager = (function () {
                 }
             }
         });
+
+        /*
+         * Runs through the navigation properties to fill the entity. If the entity is someone's daughter and is new, 
+         * is not generated directly and only in a relationship of another entity.
+         */
+        stype.navigationProperties.forEach(function (dp) {
+            if (options.isIgnored)
+                return;
+            if (dp.isScalar) {
+                var child = structObj.getProperty(dp.name);
+                if (child !== null) {
+                    if (child.entityAspect.entityState.isAdded()) {
+                        if (readedAssociations.indexOf(child) == -1) {
+                            rawObject[dp.nameOnServer] = unwrapInstance(child, transformFn, { readedAssociations: readedAssociations, isChildren: true, isIgnored: false });
+                        }
+                        else if (!isChildren) {
+                            options.isIgnored = true; // returns to ignore insertion of this entity, the insertion will be on association of parent.
+                        }
+                    }
+                    else {
+                        rawObject[dp.nameOnServer] = {
+                            __deferred: {
+                                uri: child.entityAspect.extraMetadata.uri
+                            }
+                        };
+                    }
+                }
+            } else {
+                complexObjs = structObj.getProperty(dp.name);
+                rawObject[dp.nameOnServer] = [];
+
+                complexObjs.map(function (child) {
+                    if (child !== null) {
+                        if (child.entityAspect.entityState.isAdded()) {
+                            if (readedAssociations.indexOf(child) == -1) {
+                                var entity = unwrapInstance(child, transformFn, { readedAssociations: readedAssociations, isChildren: true, isIgnored: false });
+                                entity.__metadata = {
+                                    type: child.entityType.namespace + "." + child.entityType.shortName
+                                };
+                                rawObject[dp.nameOnServer].push(entity);
+                            }
+                        }
+                        else {
+                            rawObject[dp.nameOnServer].push({
+                                __metadata: {
+                                    uri: child.entityAspect.extraMetadata.uri,
+                                    content_type: child.entityAspect.extraMetadata.type
+                                }
+                            });
+                        }
+                    }
+                });
+
+            }
+        });
         
         if (!__isEmpty(unmapped)) {
             rawObject.__unmapped = unmapped;
         }
+
         return rawObject;
     }
     

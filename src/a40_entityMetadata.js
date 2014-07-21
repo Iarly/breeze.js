@@ -248,7 +248,7 @@ var MetadataStore = (function () {
         var json = (typeof (exportedMetadata) === "string") ? JSON.parse(exportedMetadata) : exportedMetadata;
 
         if (json.schema) {
-            return CsdlMetadataParser.parse(this, json.schema, json.altMetadata);
+            return CsdlMetadataParser.parse(this, json.schema, json.altMetadata, this.onCreateModel);
         } 
 
         if (json.metadataVersion && json.metadataVersion !== breeze.metadataVersion) {
@@ -384,7 +384,7 @@ var MetadataStore = (function () {
             assertParam(dataService, "dataService").isString().or().isInstanceOf(DataService).check();
             assertParam(callback, "callback").isFunction().isOptional().check();
             assertParam(errorCallback, "errorCallback").isFunction().isOptional().check();
-            
+
             if (typeof dataService === "string") {
                 // use the dataService with a matching name or create a new one.
                 dataService = this.getDataService(dataService) || new DataService({ serviceName: dataService });
@@ -392,15 +392,15 @@ var MetadataStore = (function () {
 
             dataService = DataService.resolve([dataService]);
 
-        
+
             if (this.hasMetadataFor(dataService.serviceName)) {
                 throw new Error("Metadata for a specific serviceName may only be fetched once per MetadataStore. ServiceName: " + dataService.serviceName);
             }
-            
-            return dataService.adapterInstance.fetchMetadata(this, dataService).then(function(rawMetadata) {
+
+            return dataService.adapterInstance.fetchMetadata(this, dataService).then(function (rawMetadata) {
                 if (callback) callback(rawMetadata);
                 return Q.resolve(rawMetadata);
-            }, function(error) {
+            }, function (error) {
                 if (errorCallback) errorCallback(error);
                 return Q.reject(error);
             });
@@ -750,7 +750,7 @@ var MetadataStore = (function () {
 
 var CsdlMetadataParser = (function () {
 
-    function parse(metadataStore, schemas, altMetadata) {
+    function parse(metadataStore, schemas, altMetadata, onCreateModel) {
 
         metadataStore._entityTypeResourceMap = {};
         __toArray(schemas).forEach(function (schema) {
@@ -782,7 +782,7 @@ var CsdlMetadataParser = (function () {
             }
             if (schema.entityType) {
                 __toArray(schema.entityType).forEach(function (et) {
-                    var entityType = parseCsdlEntityType(et, schema, metadataStore);
+                    var entityType = parseCsdlEntityType(et, schema, metadataStore, onCreateModel);
 
                 });
             }
@@ -798,7 +798,7 @@ var CsdlMetadataParser = (function () {
         return metadataStore;
     }
 
-    function parseCsdlEntityType(csdlEntityType, schema, metadataStore) {
+    function parseCsdlEntityType(csdlEntityType, schema, metadataStore, onCreateModel) {
         var shortName = csdlEntityType.name;
         var ns = getNamespaceFor(shortName, schema);
         var entityType = new EntityType({
@@ -811,7 +811,7 @@ var CsdlMetadataParser = (function () {
             entityType.baseTypeName = baseTypeName;
             var baseEntityType = metadataStore._getEntityType(baseTypeName, true);
             if (baseEntityType) {
-                completeParseCsdlEntityType(entityType, csdlEntityType, schema, metadataStore, baseEntityType);
+                completeParseCsdlEntityType(entityType, csdlEntityType, schema, metadataStore, baseEntityType, onCreateModel);
             } else {
                 var deferrals = metadataStore._deferredTypes[baseTypeName];
                 if (!deferrals) {
@@ -821,14 +821,14 @@ var CsdlMetadataParser = (function () {
                 deferrals.push({ entityType: entityType, csdlEntityType: csdlEntityType });
             }
         } else {
-            completeParseCsdlEntityType(entityType, csdlEntityType, schema, metadataStore, null);
+            completeParseCsdlEntityType(entityType, csdlEntityType, schema, metadataStore, null, onCreateModel);
         }
         // entityType may or may not have been added to the metadataStore at this point.
         return entityType;
 
     }
 
-    function completeParseCsdlEntityType(entityType, csdlEntityType, schema, metadataStore, baseEntityType) {
+    function completeParseCsdlEntityType(entityType, csdlEntityType, schema, metadataStore, baseEntityType, onCreateModel) {
         var baseKeyNamesOnServer = [];
         if (baseEntityType) {
             entityType.baseEntityType = baseEntityType;
@@ -864,10 +864,13 @@ var CsdlMetadataParser = (function () {
         var deferrals = deferredTypes[entityType.name];
         if (deferrals) {
             deferrals.forEach(function (d) {
-                completeParseCsdlEntityType(d.entityType, d.csdlEntityType, schema, metadataStore, entityType);
+                completeParseCsdlEntityType(d.entityType, d.csdlEntityType, schema, metadataStore, entityType, onCreateModel);
             });
             delete deferredTypes[entityType.name];
         }
+
+        if (onCreateModel)
+            onCreateModel(entityType);
 
     }
 
@@ -888,10 +891,10 @@ var CsdlMetadataParser = (function () {
     }
 
     function parseCsdlDataProperty(parentType, csdlProperty, schema, keyNamesOnServer) {
-        var dp;
+        var dp;        
         var typeParts = csdlProperty.type.split(".");
         // Both tests on typeParts are necessary because of differing metadata conventions for OData and Edmx feeds.
-        if (typeParts[0] === "Edm" && typeParts.length === 2 ) {
+        if (typeParts[0] === "Edm" && typeParts.length === 2) {
             dp = parseCsdlSimpleProperty(parentType, csdlProperty, keyNamesOnServer);
         } else {
             if (isEnumType(csdlProperty, schema)) {
@@ -973,17 +976,6 @@ var CsdlMetadataParser = (function () {
         var dataType = parseTypeName(toEnd.type, schema).typeName;
 
         var constraint = association.referentialConstraint;
-        if (!constraint) {
-            // TODO: Revisit this later - right now we just ignore many-many and assocs with missing constraints.
-            return;
-            // Think about adding this back later.
-            //if (association.end[0].multiplicity == "*" && association.end[1].multiplicity == "*") {
-            //    // many to many relation
-            //    ???
-            //} else {
-            //    throw new Error("Foreign Key Associations must be turned on for this model");
-            //}
-        }
         
         var cfg = {
             nameOnServer: csdlProperty.name,
@@ -992,16 +984,18 @@ var CsdlMetadataParser = (function () {
             associationName: association.name
         };
 
-        var principal = constraint.principal;
-        var dependent = constraint.dependent;
+        if (constraint) {
+            var principal = constraint.principal;
+            var dependent = constraint.dependent;
         
-        var propRefs = __toArray(dependent.propertyRef);
-        var fkNames = propRefs.map(__pluck("name"));
-        if (csdlProperty.fromRole === principal.role) {
-            cfg.invForeignKeyNamesOnServer = fkNames;
-        } else {
-            // will be used later by np._update
-            cfg.foreignKeyNamesOnServer = fkNames;
+            var propRefs = __toArray(dependent.propertyRef);
+            var fkNames = propRefs.map(__pluck("name"));
+            if (csdlProperty.fromRole === principal.role) {
+                cfg.invForeignKeyNamesOnServer = fkNames;
+            } else {
+                // will be used later by np._update
+                cfg.foreignKeyNamesOnServer = fkNames;
+            }
         }
 
         var np = new NavigationProperty(cfg);
@@ -1440,14 +1434,14 @@ var EntityType = (function () {
     @method addProperty
     @param property {DataProperty|NavigationProperty}
     **/
-    proto.addProperty = function(property) {
+    proto.addProperty = function (property) {
         assertParam(property, "property").isInstanceOf(DataProperty).or().isInstanceOf(NavigationProperty).check();
-        
+
         // true is 2nd arg to force resolve of any navigation properties.
         return this._addPropertyCore(property, true);
     };
 
-    proto._addPropertyCore = function(property, shouldResolve) {
+    proto._addPropertyCore = function (property, shouldResolve) {
         if (this.isFrozen) {
             throw new Error("The '" + this.name + "' EntityType/ComplexType has been frozen. You can only add properties to an EntityType/ComplexType before any instances of that type have been created and attached to an entityManager.");
         }
@@ -1833,11 +1827,11 @@ var EntityType = (function () {
                 targetAspect.extraMetadata = rawAspect.extraMetadata;
             }
         }
-        
+
 
     }
 
-  
+    
 
     /**
     Returns a string representation of this EntityType.
@@ -2024,7 +2018,7 @@ var EntityType = (function () {
         np.entityType = entityType;
         var invNp = __arrayFirst(entityType.navigationProperties, function( altNp) {
             // Can't do this because of possibility of comparing a base class np with a subclass altNp.
-            // return altNp.associationName === np.associationName
+            //return altNp.associationName === np.associationName
             //    && altNp !== np;
             // So use this instead.
             return altNp.associationName === np.associationName &&
@@ -2086,7 +2080,7 @@ var EntityType = (function () {
     function calcUnmappedProperties(stype, instance) {
         var metadataPropNames = stype.getPropertyNames();
         var trackablePropNames = __modelLibraryDef.getDefaultInstance().getTrackablePropertyNames(instance);
-        
+
         trackablePropNames.forEach(function (pn) {
             if (metadataPropNames.indexOf(pn) === -1) {
                 var dt = DataType.fromValue(instance[pn]);
@@ -2249,7 +2243,7 @@ var ComplexType = (function () {
         
 
     proto.addProperty = function (dataProperty) {
-        assertParam(dataProperty, "dataProperty").isInstanceOf(DataProperty).check();       
+        assertParam(dataProperty, "dataProperty").isInstanceOf(DataProperty).check();
         return this._addPropertyCore(dataProperty);
     };
         
@@ -2285,7 +2279,6 @@ var ComplexType = (function () {
         "addValidator",
         "getProperty",
         "getPropertyNames",
-        "_addPropertyCore",
         "_addDataProperty",
         "_updateNames",
         "_updateCps",
@@ -2584,7 +2577,7 @@ var DataProperty = (function () {
             .whereParam("custom").isOptional()
             .applyAll(this);
     };
-
+        
     proto.toJSON = function () {
         // do not serialize dataTypes that are complexTypes
         return __toJson(this, {

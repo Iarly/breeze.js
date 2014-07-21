@@ -1,4 +1,4 @@
-﻿    
+﻿
 var EntityQuery = (function () {
     /**
     An EntityQuery instance is used to query entities either from a remote datasource or from a local {{#crossLink "EntityManager"}}{{/crossLink}}. 
@@ -8,7 +8,7 @@ var EntityQuery = (function () {
 
     @class EntityQuery
     **/
-            
+
     /**
     @example                    
         var query = new EntityQuery("Customers")
@@ -39,7 +39,7 @@ var EntityQuery = (function () {
         // this.queryOptions = new QueryOptions();
         // this.dataService = new DataService();
         this.entityManager = null;
-        
+
     };
     var proto = ctor.prototype;
     proto._$typeName = "EntityQuery";
@@ -85,7 +85,7 @@ var EntityQuery = (function () {
     __readOnly__
     @property takeCount {Integer}
     **/
-        
+
     /**
     Any additional parameters that were added to the query via the 'withParameters' method. 
 
@@ -99,14 +99,14 @@ var EntityQuery = (function () {
     __readOnly__
     @property queryOptions {QueryOptions}
     **/
-        
+
     /**
     The {{#crossLink "EntityManager"}}{{/crossLink}} for this query. This may be null and can be set via the 'using' method.
 
     __readOnly__
     @property entityManager {EntityManager}
     **/
-       
+
 
 
     /**
@@ -127,7 +127,7 @@ var EntityQuery = (function () {
         assertParam(resourceName, "resourceName").isString().check();
         return clone(this, "resourceName", resourceName);
     };
-        
+
     /**
     This is a static version of the "from" method and it creates a 'base' entityQuery for the specified resource name. 
     @example                    
@@ -159,12 +159,12 @@ var EntityQuery = (function () {
     @return {EntityQuery}
     @chainable
     **/
-    proto.toType = function(entityType) {
+    proto.toType = function (entityType) {
         assertParam(entityType, "entityType").isString().or().isInstanceOf(EntityType).check();
         return clone(this, "resultEntityType", entityType)
     };
 
-        
+
     /**
     Returns a new query with an added filter criteria. Can be called multiple times which means to 'and' with any existing Predicate.
     @example                    
@@ -231,7 +231,7 @@ var EntityQuery = (function () {
             if (this.entityType) wherePredicate.validate(this.entityType);
             if (this.wherePredicate) {
                 wherePredicate = new CompositePredicate('and', [this.wherePredicate, wherePredicate]);
-            } 
+            }
         }
         return clone(this, "wherePredicate", wherePredicate);
 
@@ -298,7 +298,7 @@ var EntityQuery = (function () {
     proto.orderByDesc = function (propertyPaths) {
         return orderByCore(this, propertyPaths, true);
     };
-        
+
     /**
     Returns a new query that selects a list of properties from the results of the original query and returns the values of just these properties. This
     will be referred to as a projection. 
@@ -357,7 +357,7 @@ var EntityQuery = (function () {
         assertParam(count, "count").isOptional().isNumber().check();
         return clone(this, "skipCount", (count == null) ? null : count);
     };
-        
+
     /**
     Returns a new query that returns only the specified number of entities when returning results. - Same as 'take'.
     Any existing 'top' can be cleared by calling 'top' with no arguments.
@@ -370,7 +370,7 @@ var EntityQuery = (function () {
     @return {EntityQuery}
     @chainable
     **/
-    proto.top = function(count) {
+    proto.top = function (count) {
         return this.take(count);
     };
 
@@ -390,7 +390,7 @@ var EntityQuery = (function () {
         assertParam(count, "count").isOptional().isNumber().check();
         return clone(this, "takeCount", (count == null) ? null : count);
     };
-        
+
     /**
     Returns a new query that will return related entities nested within its results. The expand method allows you to identify related entities, via navigation property
     names such that a graph of entities may be retrieved with a single request. Any filtering occurs before the results are 'expanded'.
@@ -441,7 +441,7 @@ var EntityQuery = (function () {
     @return {EntityQuery}
     @chainable
     **/
-    proto.withParameters = function(parameters) {
+    proto.withParameters = function (parameters) {
         assertParam(parameters, "parameters").isObject().check();
         return clone(this, "parameters", parameters);
     };
@@ -490,7 +490,7 @@ var EntityQuery = (function () {
         enabled = (enabled === undefined) ? true : !!enabled;
         return clone(this, "noTrackingEnabled", enabled);
     };
-    
+
     /**
     Returns a copy of this EntityQuery with the specified {{#crossLink "EntityManager"}}{{/crossLink}}, {{#crossLink "DataService"}}{{/crossLink}}, 
     {{#crossLink "JsonResultsAdapter"}}{{/crossLink}}, {{#crossLink "MergeStrategy"}}{{/crossLink}} or {{#crossLink "FetchStrategy"}}{{/crossLink}} applied.
@@ -532,7 +532,7 @@ var EntityQuery = (function () {
 
     function processUsing(eq, map, value, propertyName) {
         var typeName = value._$typeName || (value.parentEnum && value.parentEnum.name);
-        var key = typeName &&  typeName.substr(0, 1).toLowerCase() + typeName.substr(1);
+        var key = typeName && typeName.substr(0, 1).toLowerCase() + typeName.substr(1);
         if (propertyName && key != propertyName) {
             throw new Error("Invalid value for property: " + propertyName);
         }
@@ -546,7 +546,7 @@ var EntityQuery = (function () {
                 fn(eq, value);
             }
         } else {
-            __objectForEach(value, function(propName,val) {
+            __objectForEach(value, function (propName, val) {
                 processUsing(eq, map, val, propName)
             });
         }
@@ -721,6 +721,8 @@ var EntityQuery = (function () {
         assertParam(entity, "entity").isEntity().check();
         var navProperty = entity.entityType._checkNavProperty(navigationProperty);
         var q = new EntityQuery(navProperty.entityType.defaultResourceName);
+        if (navProperty.entityType.baseEntityType)
+            q = q.toType(navProperty.entityType.shortName);
         var pred = buildNavigationPredicate(entity, navProperty);
         q = q.where(pred);
         var em = entity.entityAspect.entityManager;
@@ -732,7 +734,7 @@ var EntityQuery = (function () {
 
 
     // protected methods
-        
+
     proto._getFromEntityType = function (metadataStore, throwErrorIfNotFound) {
         // Uncomment next two lines if we make this method public.
         // assertParam(metadataStore, "metadataStore").isInstanceOf(MetadataStore).check();
@@ -744,6 +746,10 @@ var EntityQuery = (function () {
         if (!resourceName) {
             throw new Error("There is no resourceName for this query");
         }
+
+        // verify if is set a result entity type...
+        if (this.resultEntityType)
+            resourceName = this.resultEntityType;
 
         if (metadataStore.isEmpty()) {
             if (throwErrorIfNotFound) {
@@ -765,15 +771,15 @@ var EntityQuery = (function () {
             if (throwErrorIfNotFound) {
                 throw new Error(__formatString("Cannot find an entityType for resourceName: '%1'. "
                     + " Consider adding an 'EntityQuery.toType' call to your query or "
-                    +   "calling the MetadataStore.setEntityTypeForResourceName method to register an entityType for this resourceName.", resourceName));
+                    + "calling the MetadataStore.setEntityTypeForResourceName method to register an entityType for this resourceName.", resourceName));
             } else {
                 return null;
             }
         }
-                
+
         this.entityType = entityType;
         return entityType;
-        
+
     };
 
     proto._getToEntityType = function (metadataStore, skipFromCheck) {
@@ -798,7 +804,7 @@ var EntityQuery = (function () {
             if (that[propName] === value) return that;
         }
         // copying QueryOptions is safe because they are are immutable; 
-        var copy = __extend(new EntityQuery(), that, [
+        copy = __extend(new EntityQuery(), that, [
             "resourceName",
             "entityType",
             "wherePredicate",
@@ -809,7 +815,7 @@ var EntityQuery = (function () {
             "expandClause",
             "inlineCountEnabled",
             "noTrackingEnabled",
-            "queryOptions", 
+            "queryOptions",
             "entityManager",
             "dataService",
             "resultEntityType"
@@ -837,8 +843,14 @@ var EntityQuery = (function () {
         queryOptions["$expand"] = toExpandString();
         queryOptions["$select"] = toSelectString();
         queryOptions["$inlinecount"] = toInlineCountString();
-            
+
         var qoText = toQueryOptionsString(queryOptions);
+
+        if (this.entityType.baseEntityType) {
+            return this.resourceName + '/' + this.entityType.namespace
+                + '.' + this.entityType.shortName + qoText;
+        }
+
         return this.resourceName + qoText;
 
         // private methods to this func.
@@ -852,7 +864,7 @@ var EntityQuery = (function () {
             Predicate._next = 0;
             return clause.toODataFragment(entityType);
         }
-            
+
         function toInlineCountString() {
             if (!eq.inlineCountEnabled) return;
             return eq.inlineCountEnabled ? "allpages" : "none";
@@ -866,8 +878,8 @@ var EntityQuery = (function () {
             }
             return clause.toODataFragment(entityType);
         }
-            
-            function toSelectString() {
+
+        function toSelectString() {
             var clause = eq.selectClause;
             if (!clause) return;
             if (eq.entityType) {
@@ -875,7 +887,7 @@ var EntityQuery = (function () {
             }
             return clause.toODataFragment(entityType);
         }
-            
+
         function toExpandString() {
             var clause = eq.expandClause;
             if (!clause) return;
@@ -890,7 +902,7 @@ var EntityQuery = (function () {
 
         function toTopString() {
             var count = eq.takeCount;
-            if (count==null) return;
+            if (count == null) return;
             return count.toString();
         }
 
@@ -903,7 +915,7 @@ var EntityQuery = (function () {
                         qoValue.forEach(function (qov) {
                             qoStrings.push(qoName + "=" + encodeURIComponent(qov));
                         });
-                    }  else {
+                    } else {
                         qoStrings.push(qoName + "=" + encodeURIComponent(qoValue));
                     }
                 }
@@ -934,7 +946,7 @@ var EntityQuery = (function () {
     };
 
     // private functions
-        
+
     function normalizePropertyPaths(propertyPaths) {
         assertParam(propertyPaths, "propertyPaths").isOptional().isString().or().isArray().isString().check();
         if (typeof propertyPaths === 'string') {
@@ -973,8 +985,8 @@ var EntityQuery = (function () {
         }
         return clone(that, "orderByClause", orderByClause);
     }
-                
-        
+
+
     function buildKeyPredicate(entityKey) {
         var keyProps = entityKey.entityType.keyProperties;
         var preds = __arrayZip(keyProps, entityKey.values, function (kp, v) {
@@ -1007,39 +1019,39 @@ var EntityQuery = (function () {
     return ctor;
 })();
 
-var QueryFuncs = (function() {
+var QueryFuncs = (function () {
     var obj = {
-        toupper:     { fn: function (source) { return source.toUpperCase(); }, dataType: DataType.String },
-        tolower:     { fn: function (source) { return source.toLowerCase(); }, dataType: DataType.String },
-        substring:   { fn: function (source, pos, length) { return source.substring(pos, length); }, dataType: DataType.String },
-        substringof: { fn: function (find, source) { return source.indexOf(find) >= 0;}, dataType: DataType.Boolean },
-        length:      { fn: function (source) { return source.length; }, dataType: DataType.Int32 },
-        trim:        { fn: function (source) { return source.trim(); }, dataType: DataType.String },
-        concat:      { fn: function (s1, s2) { return s1.concat(s2); }, dataType: DataType.String },
-        replace:     { fn: function (source, find, replace) { return source.replace(find, replace); }, dataType: DataType.String },
-        startswith:  { fn: function (source, find) { return __stringStartsWith(source, find); }, dataType: DataType.Boolean },
-        endswith:    { fn: function (source, find) { return __stringEndsWith(source, find); }, dataType: DataType.Boolean },
-        indexof:     { fn: function (source, find) { return source.indexOf(find); }, dataType: DataType.Int32 },
-        round:       { fn: function (source) { return Math.round(source); }, dataType: DataType.Int32 },
-        ceiling:     { fn: function (source) { return Math.ceil(source); }, dataType: DataType.Int32 },
-        floor:       { fn: function (source) { return Math.floor(source); }, dataType: DataType.Int32 },
-        second:      { fn: function (source) { return source.getSeconds(); }, dataType: DataType.Int32 },
-        minute:      { fn: function (source) { return source.getMinutes(); }, dataType: DataType.Int32 },
-        day:         { fn: function (source) { return source.getDate(); }, dataType: DataType.Int32 },
-        month:       { fn: function (source) { return source.getMonth() + 1; }, dataType: DataType.Int32 },
-        year:        { fn: function (source) { return source.getFullYear(); }, dataType: DataType.Int32 }
+        toupper: { fn: function (source) { return source.toUpperCase(); }, dataType: DataType.String },
+        tolower: { fn: function (source) { return source.toLowerCase(); }, dataType: DataType.String },
+        substring: { fn: function (source, pos, length) { return source.substring(pos, length); }, dataType: DataType.String },
+        substringof: { fn: function (find, source) { return source.indexOf(find) >= 0; }, dataType: DataType.Boolean },
+        length: { fn: function (source) { return source.length; }, dataType: DataType.Int32 },
+        trim: { fn: function (source) { return source.trim(); }, dataType: DataType.String },
+        concat: { fn: function (s1, s2) { return s1.concat(s2); }, dataType: DataType.String },
+        replace: { fn: function (source, find, replace) { return source.replace(find, replace); }, dataType: DataType.String },
+        startswith: { fn: function (source, find) { return __stringStartsWith(source, find); }, dataType: DataType.Boolean },
+        endswith: { fn: function (source, find) { return __stringEndsWith(source, find); }, dataType: DataType.Boolean },
+        indexof: { fn: function (source, find) { return source.indexOf(find); }, dataType: DataType.Int32 },
+        round: { fn: function (source) { return Math.round(source); }, dataType: DataType.Int32 },
+        ceiling: { fn: function (source) { return Math.ceil(source); }, dataType: DataType.Int32 },
+        floor: { fn: function (source) { return Math.floor(source); }, dataType: DataType.Int32 },
+        second: { fn: function (source) { return source.getSeconds(); }, dataType: DataType.Int32 },
+        minute: { fn: function (source) { return source.getMinutes(); }, dataType: DataType.Int32 },
+        day: { fn: function (source) { return source.getDate(); }, dataType: DataType.Int32 },
+        month: { fn: function (source) { return source.getMonth() + 1; }, dataType: DataType.Int32 },
+        year: { fn: function (source) { return source.getFullYear(); }, dataType: DataType.Int32 }
     };
-        
+
     return obj;
 })();
-    
-var FnNode = (function() {
+
+var FnNode = (function () {
     // valid property name identifier
-    var RX_IDENTIFIER = /^[a-z_][\w.$]*$/i ;
+    var RX_IDENTIFIER = /^[a-z_][\w.$]*$/i;
     // comma delimited expressions ignoring commas inside of quotes.
-    var RX_COMMA_DELIM1 = /('[^']*'|[^,]+)/g ;
-    var RX_COMMA_DELIM2 = /("[^"]*"|[^,]+)/g ;
-        
+    var RX_COMMA_DELIM1 = /('[^']*'|[^,]+)/g;
+    var RX_COMMA_DELIM2 = /("[^"]*"|[^,]+)/g;
+
     // entityType will only be passed in for rhs expr.
     var ctor = function (source, tokens, entityType) {
         var parts = source.split(":");
@@ -1049,7 +1061,7 @@ var FnNode = (function() {
             this.value = value;
             // value is either a string, a quoted string, a number, a bool value, or a date
             // if a string ( not a quoted string) then this represents a property name.
-            var firstChar = value.substr(0,1);
+            var firstChar = value.substr(0, 1);
             var quoted = (firstChar === "'" || firstChar === '"') && value.length > 1 && value.substr(value.length - 1) === firstChar;
             if (quoted) {
                 var unquoted = value.substr(1, value.length - 2);
@@ -1075,7 +1087,7 @@ var FnNode = (function() {
                     this.fn = function (entity) { return value; };
                     this.dataType = DataType.fromValue(value);
                 }
-            } 
+            }
         } else {
             try {
                 this.fnName = parts[0].trim().toLowerCase();
@@ -1083,8 +1095,8 @@ var FnNode = (function() {
                 this.localFn = qf.fn;
                 this.dataType = qf.dataType;
                 var that = this;
-                this.fn = function(entity) {
-                    var resolvedNodes = that.fnNodes.map(function(fnNode) {
+                this.fn = function (entity) {
+                    var resolvedNodes = that.fnNodes.map(function (fnNode) {
                         var argVal = fnNode.fn(entity);
                         return argVal;
                     });
@@ -1097,8 +1109,8 @@ var FnNode = (function() {
                 }
                 var commaMatchStr = source.indexOf("'") >= 0 ? RX_COMMA_DELIM1 : RX_COMMA_DELIM2;
                 var args = argSource.match(commaMatchStr);
-                this.fnNodes = args.map(function(a) {
-                    return new FnNode(a, tokens );
+                this.fnNodes = args.map(function (a) {
+                    return new FnNode(a, tokens);
                 });
             } catch (e) {
                 this.isRealNode = false;
@@ -1111,7 +1123,7 @@ var FnNode = (function() {
         if (typeof source !== 'string') {
             return null;
         }
-        var regex = /\([^()]*\)/ ;
+        var regex = /\([^()]*\)/;
         var m;
         var tokens = [];
         var i = 0;
@@ -1121,7 +1133,7 @@ var FnNode = (function() {
             var repl = ":" + i++;
             source = source.replace(token, repl);
         }
-        
+
         var node = new FnNode(source, tokens, operator ? null : entityType);
         if (node.isRealNode) {
             if (!node.dataType && operator && operator.isStringFn) {
@@ -1132,13 +1144,13 @@ var FnNode = (function() {
         } else {
             return null;
         }
-        
-        
+
+
     };
 
-    proto.toString = function() {
+    proto.toString = function () {
         if (this.fnName) {
-            var args = this.fnNodes.map(function(fnNode) {
+            var args = this.fnNodes.map(function (fnNode) {
                 return fnNode.toString();
             });
             var uri = this.fnName + "(" + args.join(",") + ")";
@@ -1151,15 +1163,15 @@ var FnNode = (function() {
     proto.toODataFragment = function (entityType) {
         this._validate(entityType);
         if (this.fnName) {
-            var args = this.fnNodes.map(function(fnNode) {
+            var args = this.fnNodes.map(function (fnNode) {
                 return fnNode.toODataFragment(entityType);
-            });                
+            });
             var uri = this.fnName + "(" + args.join(",") + ")";
             return uri;
         } else {
             var firstChar = this.value.substr(0, 1);
             if (firstChar === "'" || firstChar === '"') {
-                return this.value;                  
+                return this.value;
             } else if (this.value == this.propertyPath) {
                 return entityType._clientPropertyPathToServer(this.propertyPath);
             } else {
@@ -1168,9 +1180,9 @@ var FnNode = (function() {
         }
     };
 
-    proto._validate = function(entityType) {
+    proto._validate = function (entityType) {
         // will throw if not found;
-        if (this.isValidated) return;            
+        if (this.isValidated) return;
         this.isValidated = true;
         if (this.propertyPath) {
             if (entityType.isAnonymous) return;
@@ -1185,12 +1197,12 @@ var FnNode = (function() {
                 this.dataType = prop.entityType;
             }
         } else if (this.fnNodes) {
-            this.fnNodes.forEach(function(node) {
+            this.fnNodes.forEach(function (node) {
                 node._validate(entityType);
             });
         }
     };
-        
+
     function createPropFunction(propertyPath) {
         var properties = propertyPath.split('.');
         if (properties.length === 1) {
@@ -1206,7 +1218,7 @@ var FnNode = (function() {
 
     return ctor;
 })();
-   
+
 var FilterQueryOp = (function () {
     /**
     FilterQueryOp is an 'Enum' containing all of the valid  {{#crossLink "Predicate"}}{{/crossLink}} 
@@ -1296,7 +1308,7 @@ var FilterQueryOp = (function () {
     aEnum.All = aEnum.addSymbol({ operator: "all", isAnyAll: true, aliases: ["every"] });
 
     aEnum.IsTypeOf = aEnum.addSymbol({ operator: "isof", isFunction: true, aliases: ["isTypeOf"] });
-    
+
     aEnum.resolveSymbols();
     aEnum._map = function () {
         var map = {};
@@ -1310,7 +1322,7 @@ var FilterQueryOp = (function () {
             }
         });
         return map;
-    } ();
+    }();
     aEnum.from = function (op) {
         if (aEnum.contains(op)) {
             return op;
@@ -1319,7 +1331,7 @@ var FilterQueryOp = (function () {
         }
     };
     return aEnum;
-}) ();
+})();
 
 var BooleanQueryOp = (function () {
     var aEnum = new Enum("BooleanQueryOp");
@@ -1349,7 +1361,7 @@ var BooleanQueryOp = (function () {
         }
     };
     return aEnum;
-}) ();
+})();
 
 var Predicate = (function () {
     /**  
@@ -1357,7 +1369,7 @@ var Predicate = (function () {
     method that would modify a Predicate actually returns a new Predicate. 
     @class Predicate
     **/
-        
+
     /**
     Predicate constructor
     @example
@@ -1597,7 +1609,7 @@ var Predicate = (function () {
             args = argsx[0];
         } else {
             var args = __arraySlice(argsx);
-            if (! (args[0] instanceof Predicate)) {
+            if (!(args[0] instanceof Predicate)) {
                 args = [Predicate.create(args)];
             }
         }
@@ -1615,15 +1627,15 @@ var Predicate = (function () {
 var SimplePredicate = (function () {
 
     var ctor = function (args) {
-    
+
         if (args.length === 1) {
             this._odataExpr = args[0];
             return;
         }
-    
+
         var propertyOrExpr = args[0];
         assertParam(propertyOrExpr, "propertyOrExpr").isString().isOptional().check();
-        
+
         var operator = args[1];
         assertParam(operator, "operator").isEnumOf(FilterQueryOp).or().isString().check();
         var filterQueryOp = FilterQueryOp.from(operator);
@@ -1645,9 +1657,9 @@ var SimplePredicate = (function () {
             this._value = (value instanceof Predicate) ? value : new SimplePredicate(args.slice(2));
             this._isLiteral = undefined;
             return;
-        } 
+        }
         assertParam(value, "value").isRequired(true).check();
-        
+
         // _datatype is just a guess here - it will only be used if we aren't certain from the rest of the expression.
         if ((value != null) && (typeof (value) === "object") && value.value !== undefined) {
             this._dataType = value.dataType || DataType.fromValue(value.value);
@@ -1659,10 +1671,10 @@ var SimplePredicate = (function () {
             this._isLiteral = undefined;
         }
     };
-        
+
     var proto = new Predicate({ prototype: true });
     ctor.prototype = proto;
-    
+
 
     proto.toODataFragment = function (entityType, prefix) {
         if (this._odataExpr) {
@@ -1681,7 +1693,7 @@ var SimplePredicate = (function () {
         var v1Expr = this._fnNode1 && this._fnNode1.toODataFragment(entityType);
         if (prefix) {
             v1Expr = prefix + "/" + v1Expr;
-        } 
+        }
 
         Predicate._next += 1;
         prefix = "x" + Predicate._next;
@@ -1718,10 +1730,10 @@ var SimplePredicate = (function () {
         var dataType = this._fnNode1.dataType || this._dataType;
         var predFn = getPredicateFn(entityType, this._filterQueryOp, dataType);
         var v1Fn = this._fnNode1.fn;
-            
+
         if (this._fnNode2) {
             var v2Fn = this._fnNode2.fn;
-            return function(entity) {
+            return function (entity) {
                 return predFn(v1Fn(entity), v2Fn(entity));
             };
         } else {
@@ -1737,7 +1749,7 @@ var SimplePredicate = (function () {
                 };
             }
         }
-            
+
     };
 
     proto.toString = function () {
@@ -1757,23 +1769,23 @@ var SimplePredicate = (function () {
         }
 
         if (this._fnNode2 === undefined && !this._isLiteral) {
-           this._fnNode2 = FnNode.create(this._value, entityType);
+            this._fnNode2 = FnNode.create(this._value, entityType);
         }
 
     };
-        
+
     // internal functions
 
     // TODO: still need to handle localQueryComparisonOptions for guids.
 
-        
+
     function getPredicateFn(entityType, filterQueryOp, dataType) {
         var lqco = entityType.metadataStore.localQueryComparisonOptions;
         var mc = getComparableFn(dataType);
         var predFn;
         switch (filterQueryOp) {
             case FilterQueryOp.Equals:
-                predFn = function(v1, v2) {
+                predFn = function (v1, v2) {
                     if (v1 && typeof v1 === 'string') {
                         return stringEquals(v1, v2, lqco);
                     } else {
@@ -1811,11 +1823,11 @@ var SimplePredicate = (function () {
             case FilterQueryOp.Contains:
                 predFn = function (v1, v2) { return stringContains(v1, v2, lqco); };
                 break;
-            case FilterQueryOp.Any: 
-                predFn = function (v1, v2) { return v1.some(function(v) { return v2(v); }); };
+            case FilterQueryOp.Any:
+                predFn = function (v1, v2) { return v1.some(function (v) { return v2(v); }); };
                 break;
-            case FilterQueryOp.All: 
-                predFn = function (v1, v2) { return v1.every(function(v) { return v2(v); }); };
+            case FilterQueryOp.All:
+                predFn = function (v1, v2) { return v1.every(function (v) { return v2(v); }); };
                 break;
             default:
                 throw new Error("Unknown FilterQueryOp: " + filterQueryOp);
@@ -1823,7 +1835,7 @@ var SimplePredicate = (function () {
         }
         return predFn;
     }
-        
+
     function stringEquals(a, b, lqco) {
         if (b == null) return false;
         if (typeof b !== 'string') {
@@ -1839,9 +1851,9 @@ var SimplePredicate = (function () {
         }
         return a === b;
     }
-        
+
     function stringStartsWith(a, b, lqco) {
-            
+
         if (!lqco.isCaseSensitive) {
             a = (a || "").toLowerCase();
             b = (b || "").toLowerCase();
@@ -1856,7 +1868,7 @@ var SimplePredicate = (function () {
         }
         return __stringEndsWith(a, b);
     }
-        
+
     function stringContains(a, b, lqco) {
         if (!lqco.isCaseSensitive) {
             a = (a || "").toLowerCase();
@@ -1888,7 +1900,7 @@ var CompositePredicate = (function () {
         }
         this._predicates = predicates;
     };
-    var proto  = new Predicate({ prototype: true });
+    var proto = new Predicate({ prototype: true });
     ctor.prototype = proto;
 
     proto.toODataFragment = function (entityType, prefix) {
@@ -1974,7 +1986,7 @@ var OrderByClause = (function () {
         var obc = new OrderByClause("Company.CompanyName, LastName", true);
     @class OrderByClause
     */
-        
+
     /*
     @method <ctor> OrderByClause
     @param propertyPaths {String|Array or String} A ',' delimited string of 'propertyPaths' or an array of property path string. Each 'propertyPath'
@@ -2067,7 +2079,7 @@ var SimpleOrderByClause = (function () {
                 if (!isAsc) {
                     throw new Error("the second word in the propertyPath must begin with 'desc' or 'asc'");
                 }
-                    
+
             }
         }
         this.propertyPath = parts[0];
@@ -2106,7 +2118,7 @@ var SimpleOrderByClause = (function () {
                 } else {
                     value1 = (value1 || "").toLowerCase();
                     value2 = (value2 || "").toLowerCase();
-                } 
+                }
             } else {
                 var normalize = getComparableFn(dataType);
                 value1 = normalize(value1);
@@ -2118,7 +2130,7 @@ var SimpleOrderByClause = (function () {
                 return isDesc ? -1 : 1;
             } else {
                 return isDesc ? 1 : -1;
-            } 
+            }
         };
     };
 
@@ -2176,13 +2188,13 @@ var CompositeOrderByClause = (function () {
     };
     return ctor;
 })();
-    
+
 // Not exposed
 var SelectClause = (function () {
-        
+
     var ctor = function (propertyPaths) {
         this.propertyPaths = propertyPaths;
-        this._pathNames = propertyPaths.map(function(pp) {
+        this._pathNames = propertyPaths.map(function (pp) {
             return pp.replace(".", "_");
         });
     };
@@ -2193,18 +2205,18 @@ var SelectClause = (function () {
             return;
         } // can't validate yet
         // will throw an exception on bad propertyPath
-        this.propertyPaths.forEach(function(path) {
+        this.propertyPaths.forEach(function (path) {
             entityType.getProperty(path, true);
         });
     };
 
-    proto.toODataFragment = function(entityType) {
+    proto.toODataFragment = function (entityType) {
         var frag = this.propertyPaths.map(function (pp) {
-                return entityType._clientPropertyPathToServer(pp);
-            }).join(",");
-            return frag;
+            return entityType._clientPropertyPathToServer(pp);
+        }).join(",");
+        return frag;
     };
-        
+
     proto.toFunction = function (entityType) {
         var that = this;
         return function (entity) {
@@ -2218,24 +2230,24 @@ var SelectClause = (function () {
 
     return ctor;
 })();
-    
-    // Not exposed
+
+// Not exposed
 var ExpandClause = (function () {
-        
+
     // propertyPaths is an array of strings.
     var ctor = function (propertyPaths) {
         this.propertyPaths = propertyPaths;
     };
-        
-    var proto = ctor.prototype;
-       
-//        // TODO:
-//        proto.validate = function (entityType) {
-//            
-//        };
 
-    proto.toODataFragment = function(entityType) {
-        var frag = this.propertyPaths.map(function(pp) {
+    var proto = ctor.prototype;
+
+    //        // TODO:
+    //        proto.validate = function (entityType) {
+    //            
+    //        };
+
+    proto.toODataFragment = function (entityType) {
+        var frag = this.propertyPaths.map(function (pp) {
             return entityType._clientPropertyPathToServer(pp);
         }).join(",");
         return frag;
@@ -2243,7 +2255,7 @@ var ExpandClause = (function () {
 
     return ctor;
 })();
-    
+
 function getPropertyPathValue(obj, propertyPath) {
     var properties;
     if (Array.isArray(propertyPath)) {
@@ -2265,18 +2277,18 @@ function getPropertyPathValue(obj, propertyPath) {
         return nextValue;
     }
 }
-   
+
 function getComparableFn(dataType) {
     if (dataType && dataType.isDate) {
         // dates don't perform equality comparisons properly 
         return function (value) { return value && value.getTime(); };
     } else if (dataType === DataType.Time) {
         // durations must be converted to compare them
-        return function(value) { return value && __durationToSeconds(value); };
+        return function (value) { return value && __durationToSeconds(value); };
     } else {
-        return function(value) { return value; };
+        return function (value) { return value; };
     }
-        
+
 }
 
 // expose

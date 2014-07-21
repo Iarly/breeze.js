@@ -366,7 +366,14 @@ var MappingContext = (function () {
         if (thisEntity !== targetEntity) {
             // if not - hook it up.
             relatedEntities.push(relatedEntity);
-            relatedEntity.setProperty(inverseProperty.name, targetEntity);
+            // Verify if inverse property is scalar...
+            if (inverseProperty.isScalar)
+                relatedEntity.setProperty(inverseProperty.name, targetEntity);
+                // if is a collection is a many-to-many, push target entity...
+            else {
+                var nonScalarProperty = relatedEntity.getProperty(inverseProperty.name);
+                nonScalarProperty.push(targetEntity);
+            }
         }
     }
      

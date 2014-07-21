@@ -115,7 +115,7 @@ var DataService = (function () {
             useJsonp: false
         });
         var ds = new DataService(__resolveProperties(dataServices,
-            ["serviceName", "adapterName", "hasServerMetadata", "jsonResultsAdapter", "useJsonp"]));
+            ["serviceName", "adapterName", "hasServerMetadata", "jsonResultsAdapter", "useJsonp", "customMetadataUrl"]));
 
         if (!ds.serviceName) {
             throw new Error("Unable to resolve a 'serviceName' for this dataService");
@@ -134,6 +134,7 @@ var DataService = (function () {
                 .whereParam("hasServerMetadata").isBoolean().isOptional()
                 .whereParam("jsonResultsAdapter").isInstanceOf(JsonResultsAdapter).isOptional()
                 .whereParam("useJsonp").isBoolean().isOptional()
+                .whereParam("customMetadataUrl").isString().isOptional()
                 .applyAll(obj);
             obj.serviceName = obj.serviceName && DataService._normalizeServiceName(obj.serviceName);
             obj.adapterInstance = obj.adapterName && __config.getAdapterInstance("dataService", obj.adapterName);
@@ -157,7 +158,8 @@ var DataService = (function () {
             adapterName: null,
             hasServerMetadata: null,
             jsonResultsAdapter: function (v) { return v && v.name; },
-            useJsonp: null
+            useJsonp: null,
+            customMetadataUrl: null
         });       
     };
 

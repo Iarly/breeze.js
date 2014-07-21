@@ -2,7 +2,7 @@
 @module breeze   
 **/
 
-var EntityAspect = (function() {
+var EntityAspect = (function () {
     /**
     An EntityAspect instance is associated with every attached entity and is accessed via the entity's 'entityAspect' property. 
         
@@ -18,7 +18,7 @@ var EntityAspect = (function() {
         var currentState = aspect.entityState;
     @class EntityAspect
     **/
-    var ctor = function(entity) {
+    var ctor = function (entity) {
         if (entity === null) {
             var nullInstance = EntityAspect._nullInstance;
             if (nullInstance) return nullInstance;
@@ -43,13 +43,16 @@ var EntityAspect = (function() {
         this.originalValues = {};
         this.hasValidationErrors = false;
         this._validationErrors = {};
-
+        
         // Uncomment when we implement entityAspect.isNavigationPropertyLoaded method
         // this._loadedNavPropMap = {};
         
         this.validationErrorsChanged = new Event("validationErrorsChanged", this);
         this.propertyChanged = new Event("propertyChanged", this);
         // in case this is the NULL entityAspect. - used with ComplexAspects that have no parent.
+
+        // lists that control many-to-many links between entities
+        this.resetLinks();
 
         if (entity != null) {
             entity.entityAspect = this;
@@ -69,9 +72,58 @@ var EntityAspect = (function() {
     };
     var proto = ctor.prototype;
 
+    proto.resetLinks = function () {
+        this.inseredLinks = [];
+        this.removedLinks = [];
+    };
   
+    proto.insertLink = function (childEntity, np) {
+        var removedLink = __arrayFirst(this.removedLinks, function (link) {
+            return link.entity === childEntity && (link.np == np || link.np == np.inverse);
+        });
 
-    Event.bubbleEvent(proto, function() {
+        if (removedLink !== null) {
+            var removedIndexOf = this.removedLinks.indexOf(removedLink);
+            this.removedLinks.splice(removedIndexOf, 1);
+            return;
+        }
+
+        var inseredLink = __arrayFirst(this.inseredLinks, function (link) {
+            return link.entity === childEntity && (link.np == np || link.np == np.inverse);
+        });
+
+        if (inseredLink == null) {
+            this.inseredLinks.push({ entity: childEntity, np: np });
+            if (this.entityManager !== null
+                && !this.entityState.isAdded() && !this.entityState.isDeleted())
+                this.setModified();
+        }
+    };
+
+    proto.removeLink = function (childEntity, np) {
+        var inseredLink = __arrayFirst(this.inseredLinks, function (link) {
+            return link.entity === childEntity && (link.np == np || link.np == np.inverse);
+        });
+
+        if (inseredLink !== null) {
+            var inseredIndexOf = this.inseredLinks.indexOf(inseredLink);
+            this.inseredLinks.splice(inseredIndexOf, 1);
+            return;
+        }
+
+        var removedLink = __arrayFirst(this.removedLinks, function (link) {
+            return link.entity === childEntity && (link.np == np || link.np == np.inverse);
+        });
+
+        if (removedLink == null) {
+            this.removedLinks.push({ entity: childEntity, np: np });
+            if (!this.entityState.isAdded() && !this.entityState.isDeleted())
+                this.setModified();
+        }
+    };
+
+
+    Event.bubbleEvent(proto, function () {
         return this.entityManager;
     });
 
@@ -171,12 +223,12 @@ var EntityAspect = (function() {
     @param [forceRefresh=false] {Boolean} Forces the recalculation of the key.  This should normally be unnecessary.
     @return {EntityKey} The {{#crossLink "EntityKey"}}{{/crossLink}} associated with this Entity.
     **/
-    proto.getKey = function(forceRefresh) {
+    proto.getKey = function (forceRefresh) {
         forceRefresh = assertParam(forceRefresh, "forceRefresh").isBoolean().isOptional().check(false);
         if (forceRefresh || !this._entityKey) {
             var entityType = this.entity.entityType;
             var keyProps = entityType.keyProperties;
-            var values = keyProps.map(function(p) {
+            var values = keyProps.map(function (p) {
                 return this.entity.getProperty(p.name);
             }, this);
             this._entityKey = new EntityKey(entityType, values);
@@ -193,7 +245,7 @@ var EntityAspect = (function() {
             // The 'order' entity will now be in an 'Unchanged' state with any changes committed.
     @method acceptChanges
     **/
-    proto.acceptChanges = function() {
+    proto.acceptChanges = function () {
         var em = this.entityManager;
         if (this.entityState.isDeleted()) {
             em.detachEntity(this.entity);
@@ -212,26 +264,28 @@ var EntityAspect = (function() {
             // The 'order' entity will now be in an 'Unchanged' state with any changes rejected. 
     @method rejectChanges
     **/
-    proto.rejectChanges = function() {
+    proto.rejectChanges = function () {
         var entity = this.entity;
         var entityManager = this.entityManager;
-        // we do not want PropertyChange or EntityChange events to occur here
-        __using(entityManager, "isRejectingChanges", true, function() {
-            rejectChangesCore(entity);
-        });
-        if (this.entityState.isAdded()) {
-            // next line is needed because the following line will cause this.entityManager -> null;
-            entityManager.detachEntity(entity);
-            // need to tell em that an entity that needed to be saved no longer does.
-            entityManager._notifyStateChange(entity, false);
-        } else {
-            if (this.entityState.isDeleted()) {
-                this.entityManager._linkRelatedEntities(entity);
+        if (entityManager) {
+            // we do not want PropertyChange or EntityChange events to occur here
+                __using(entityManager, "isRejectingChanges", true, function () {
+                rejectChangesCore(entity);
+            });
+            if (this.entityState.isAdded()) {
+                // next line is needed because the following line will cause this.entityManager -> null;
+                entityManager.detachEntity(entity);
+                // need to tell em that an entity that needed to be saved no longer does.
+                entityManager._notifyStateChange(entity, false);
+            } else {
+                if (this.entityState.isDeleted()) {
+                    this.entityManager._linkRelatedEntities(entity);
+                }
+                this.setUnchanged();
+                // propertyChanged propertyName is null because more than one property may have changed.
+                this.propertyChanged.publish({ entity: entity, propertyName: null });
+                this.entityManager.entityChanged.publish({ entityAction: EntityAction.RejectChanges, entity: entity });
             }
-            this.setUnchanged();
-            // propertyChanged propertyName is null because more than one property may have changed.
-            this.propertyChanged.publish({ entity: entity, propertyName: null });
-            this.entityManager.entityChanged.publish({ entityAction: EntityAction.RejectChanges, entity: entity });
         }
     };
 
@@ -242,7 +296,7 @@ var EntityAspect = (function() {
         for (var propName in originalValues) {
             target.setProperty(propName, originalValues[propName]);
         }
-        stype.complexProperties.forEach(function(cp) {
+        stype.complexProperties.forEach(function (cp) {
             var cos = target.getProperty(cp.name);
             if (cp.isScalar) {
                 rejectChangesCore(cos);
@@ -253,7 +307,7 @@ var EntityAspect = (function() {
         });
     }
 
-    proto.getPropertyPath = function(propName) {
+    proto.getPropertyPath = function (propName) {
         return propName;
     }
 
@@ -265,8 +319,9 @@ var EntityAspect = (function() {
             // The 'order' entity will now be in an 'Unchanged' state with any changes committed.
     @method setUnchanged
     **/
-    proto.setUnchanged = function () {
+    proto.setUnchanged = function () 
         checkStateChange(this);
+        this.resetLinks();
         clearOriginalValues(this.entity);
         delete this.hasTempKey;
         this.entityState = EntityState.Unchanged;
@@ -431,8 +486,8 @@ var EntityAspect = (function() {
     @return {Boolean} Whether the entity passed validation.
     **/
     proto.validateEntity = function () {
-        var ok =true;
-        this._processValidationOpAndPublish(function(that) {
+        var ok = true;
+        this._processValidationOpAndPublish(function (that) {
             ok = validateTarget(that.entity);
         });
         return ok;
@@ -495,7 +550,7 @@ var EntityAspect = (function() {
         }
         context = context || {};
         context.entity = this.entity;
-        if (typeof(property) === 'string') {
+        if (typeof (property) === 'string') {
             context.property = this.entity.entityType.getProperty(property, true);
             context.propertyName = property;
         } else {
@@ -571,7 +626,7 @@ var EntityAspect = (function() {
     **/
     proto.clearValidationErrors = function () {
         this._processValidationOpAndPublish(function (that) {
-            __objectForEach(that._validationErrors, function(key, valError) {
+            __objectForEach(that._validationErrors, function (key, valError) {
                 if (valError) {
                     delete that._validationErrors[key];
                     that._pendingValidationResult.removed.push(valError);
@@ -620,7 +675,7 @@ var EntityAspect = (function() {
 
     // internal methods
 
-    proto._detach = function() {
+    proto._detach = function () {
             
         this.entityGroup = null;
         this.entityManager = null;
@@ -729,14 +784,52 @@ var EntityAspect = (function() {
 
     };
 
-    
+    function clearNp(entity, np, relatedIsDeleted) {
+        if (relatedIsDeleted) {
+            var property = np.relatedDataProperties[0];
+            // Verify if child entity of a deleted entity has a required navigation property 
+            // then set child as detached to pass responsibility to server..
+            if (property && !property.isNullable) {
+                entity.entityAspect.setDetached();
+            } else {
+            entity.setProperty(np.name, null);
+            }
+        } else {
+            // relatedEntity was detached.
+            var property = np.relatedDataProperties[0];
+
+            if (property && !property.isNullable && entity.entityAspect.entityState.isAdded()) {
+                // if property is not nullable and entity is added detach them...
+                entity.entityAspect.setDetached();
+            }
+            else {
+            // need to clear child np without clearing child fk or changing the entityState of the child
+            var em = entity.entityAspect.entityManager;
+
+            var fkNames = np.foreignKeyNames;
+            if (fkNames) {
+                var fkVals = fkNames.map(function (fkName) {
+                    return entity.getProperty(fkName);
+                });
+            }
+            entity.setProperty(np.name, null);
+            if (fkNames) {
+                fkNames.forEach(function (fkName, i) {
+                    entity.setProperty(fkName, fkVals[i])
+                });
+            }
+            }
+
+        }
+    }
+
     function validate(aspect, validator, value, context) {
         var ve = validator.validate(value, context);
         if (ve) {
             aspect._addValidationError(ve);
             return false;
         } else {
-            var key = ValidationError.getKey(validator, context ? context.propertyName: null);
+            var key = ValidationError.getKey(validator, context ? context.propertyName : null);
             aspect._removeValidationError(key);
             return true;
         }
@@ -746,7 +839,7 @@ var EntityAspect = (function() {
 
 })();
 
-var ComplexAspect = (function() {
+var ComplexAspect = (function () {
         
     /**
     An ComplexAspect instance is associated with every complex object instance and is accessed via the complex object's 'complexAspect' property. 
@@ -762,7 +855,7 @@ var ComplexAspect = (function() {
         // aCustomer === aspect.parent;
     @class ComplexAspect
     **/
-    var ctor = function(complexObject, parent, parentProperty) {
+    var ctor = function (complexObject, parent, parentProperty) {
         if (!complexObject) {
             throw new Error("The  ComplexAspect ctor requires an entity as its only argument.");
         }
@@ -831,14 +924,14 @@ var ComplexAspect = (function() {
     __readOnly__
     @property originalValues {Object}
     **/
-
+    
     /**
     Returns the EntityAspect for the top level entity tht contains this complex object.
 
     @method getEntityAspect
     @return  {String}  
     **/
-    proto.getEntityAspect = function() {
+    proto.getEntityAspect = function () {
         var parent = this.parent;
         if (!parent) return new EntityAspect(null);
         var entityAspect = parent.entityAspect;
@@ -856,7 +949,7 @@ var ComplexAspect = (function() {
     @param propName {String}  The property name of a property on this complex aspect for which we want the full path.
     @return  {String}    The 'property path' from the top level entity that contains this complex object to this object.
     **/
-    proto.getPropertyPath = function(propName) {
+    proto.getPropertyPath = function (propName) {
         var parent = this.parent;
         if (!parent) return null;
         var aspect = parent.complexAspect || parent.entityAspect;
@@ -868,5 +961,5 @@ var ComplexAspect = (function() {
 })();
 
 
-breeze.EntityAspect= EntityAspect;
-breeze.ComplexAspect= ComplexAspect;
+breeze.EntityAspect = EntityAspect;
+breeze.ComplexAspect = ComplexAspect;
