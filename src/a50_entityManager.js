@@ -2190,7 +2190,7 @@ var EntityManager = (function () {
                     else {
                         rawObject[dp.nameOnServer] = {
                             __deferred: {
-                                uri: parent.entityAspect.extraMetadata.uri
+                                uri: parent.entityAspect.extraMetadata.uriKey
                             }
                         };
                     }
@@ -2213,7 +2213,7 @@ var EntityManager = (function () {
                         else {
                             rawObject[dp.nameOnServer].push({
                                 __metadata: {
-                                    uri: child.entityAspect.extraMetadata.uri,
+                                    uri: child.entityAspect.extraMetadata.uriKey,
                                     content_type: child.entityAspect.extraMetadata.type
                                 }
                             });
