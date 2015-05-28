@@ -697,7 +697,10 @@ var EntityQuery = (function () {
     **/
     ctor.fromEntityKey = function (entityKey) {
         assertParam(entityKey, "entityKey").isInstanceOf(EntityKey).check();
-        var q = new EntityQuery(entityKey.entityType.defaultResourceName);
+        var baseEntityType = entityKey.entityType;
+        while (baseEntityType.baseEntityType)
+            baseEntityType = baseEntityType.baseEntityType;
+        var q = new EntityQuery(baseEntityType.defaultResourceName);
         var pred = buildKeyPredicate(entityKey);
         q = q.where(pred).toType(entityKey.entityType);
         return q;
@@ -760,7 +763,8 @@ var EntityQuery = (function () {
             }
         }
 
-        var entityTypeName = metadataStore.getEntityTypeNameForResourceName(resourceName);
+        var entityTypeName = resourceName instanceof Object ? null :
+            metadataStore.getEntityTypeNameForResourceName(resourceName);
         if (entityTypeName) {
             entityType = metadataStore._getEntityType(entityTypeName);
         } else {
@@ -883,7 +887,11 @@ var EntityQuery = (function () {
             var clause = eq.selectClause;
             if (!clause) return;
             if (eq.entityType) {
-                clause.validate(eq.entityType);
+                try {
+                    clause.validate(eq.entityType);
+                } catch (e) {
+                    console.warn(e);
+                }
             }
             return clause.toODataFragment(entityType);
         }
@@ -1705,8 +1713,9 @@ var SimplePredicate = (function () {
             if (this._fnNode2) {
                 v2Expr = this._fnNode2.toODataFragment(entityType);
             } else {
-                var dataType = this._fnNode1.dataType || this._dataType;
-                v2Expr = dataType.fmtOData(value);
+                //var dataType = this._fnNode1.dataType || this._dataType;
+                var fmtOData = (this._fnNode1.dataType ? this._fnNode1.dataType.fmtOData : null) || this._dataType.fmtOData;
+                v2Expr = fmtOData(value);
             }
             if (filterQueryOp.isFunction) {
                 if (filterQueryOp == FilterQueryOp.Contains) {
@@ -2144,7 +2153,7 @@ var CompositeOrderByClause = (function () {
         var resultClauses = [];
         orderByClauses.forEach(function (obc) {
             if (obc instanceof CompositeOrderByClause) {
-                resultClauses = resultClauses.concat(obc.orderByClauses);
+                resultClauses = resultClauses.concat(obc._orderByClauses);
             } else if (obc instanceof SimpleOrderByClause) {
                 resultClauses.push(obc);
             } else {
