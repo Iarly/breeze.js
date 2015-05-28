@@ -756,7 +756,14 @@ var EntityAspect = (function () {
                 if (npValue) {
                     if (inverseNp) {
                         if (inverseNp.isScalar) {
-                            npValue.setProperty(inverseNp.name, null);
+                            // Verify if child entity of a deleted entity has a required navigation property 
+                            // then set child as detached to pass responsibility to server..
+                            var property = inverseNp.relatedDataProperties[0];
+                            if (property && !property.isNullable) {
+                                npValue.entityAspect.setDetached();
+                            } else {
+                                npValue.setProperty(inverseNp.name, null);
+                            }
                         } else {
                             var collection = npValue.getProperty(inverseNp.name);
                             if (collection.length) {
@@ -771,7 +778,14 @@ var EntityAspect = (function () {
                     // npValue is a live list so we need to copy it first.
                     npValue.slice(0).forEach(function (v) {
                         if (inverseNp.isScalar) {
-                            v.setProperty(inverseNp.name, null);
+                            // Verify if child entity of a deleted entity has a required navigation property 
+                            // then set child as detached to pass responsibility to server..
+                            var property = inverseNp.relatedDataProperties[0];
+                            if (property && !property.isNullable) {
+                                v.entityAspect.setDetached();
+                            } else {
+                                v.setProperty(inverseNp.name, null);
+                            }
                         } else {
                             // TODO: many to many - not yet handled.
                         }
@@ -783,45 +797,6 @@ var EntityAspect = (function () {
         });
 
     };
-
-    function clearNp(entity, np, relatedIsDeleted) {
-        if (relatedIsDeleted) {
-            var property = np.relatedDataProperties[0];
-            // Verify if child entity of a deleted entity has a required navigation property 
-            // then set child as detached to pass responsibility to server..
-            if (property && !property.isNullable) {
-                entity.entityAspect.setDetached();
-            } else {
-                entity.setProperty(np.name, null);
-            }
-        } else {
-            // relatedEntity was detached.
-            var property = np.relatedDataProperties[0];
-
-            if (property && !property.isNullable && entity.entityAspect.entityState.isAdded()) {
-                // if property is not nullable and entity is added detach them...
-                entity.entityAspect.setDetached();
-            }
-            else {
-                // need to clear child np without clearing child fk or changing the entityState of the child
-                var em = entity.entityAspect.entityManager;
-
-                var fkNames = np.foreignKeyNames;
-                if (fkNames) {
-                    var fkVals = fkNames.map(function (fkName) {
-                        return entity.getProperty(fkName);
-                    });
-                }
-                entity.setProperty(np.name, null);
-                if (fkNames) {
-                    fkNames.forEach(function (fkName, i) {
-                        entity.setProperty(fkName, fkVals[i])
-                    });
-                }
-            }
-
-        }
-    }
 
     function validate(aspect, validator, value, context) {
         var ve = validator.validate(value, context);
