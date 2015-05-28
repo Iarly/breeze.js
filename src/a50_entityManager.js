@@ -2226,8 +2226,10 @@ var EntityManager = (function () {
 
         if (!__isEmpty(unmapped))
             rawObject.__unmapped = unmapped;
-        if (!options.isIgnored)
+        if (!options.isIgnored) {
+            readedAssociations.splice(0, readedAssociations.length);
             internalReadedAssociations.map(function (x) { readedAssociations.push(x); });
+        }
         return rawObject;
     }
 
