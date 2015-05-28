@@ -247,18 +247,16 @@
                 // TODO: may be able to make this more efficient by caching of the previous value.
                 var entityTypeName = MetadataStore.normalizeTypeName(metadata.type);
                 var et = entityTypeName && mappingContext.entityManager.metadataStore.getEntityType(entityTypeName, true);
-                // if (et && et._mappedPropertiesCount === Object.keys(node).length - 1) {
-                if (et && et._mappedPropertiesCount <= Object.keys(node).length - 1) {
-                    result.entityType = et;
-                    var baseUri = mappingContext.dataService.serviceName;
-                    var uriKey = metadata.uri || metadata.id;
-                    if (core.stringStartsWith(uriKey, baseUri)) {
-                        uriKey = uriKey.substring(baseUri.length);
-                    }
-                    result.extraMetadata = {
-                        uriKey: uriKey,
-                        etag: metadata.etag
-                    }
+
+                result.entityType = et;
+                var baseUri = mappingContext.dataService.serviceName;
+                var uriKey = metadata.uri || metadata.id;
+                if (core.stringStartsWith(uriKey, baseUri)) {
+                    uriKey = uriKey.substring(baseUri.length);
+                }
+                result.extraMetadata = {
+                    uriKey: uriKey,
+                    etag: metadata.etag
                 }
             }
             // OData v3 - projection arrays will be enclosed in a results array
@@ -298,7 +296,7 @@
 
     function _getEntityUri(prefix, entity) {
         var extraMetadata = entity.entityAspect.extraMetadata;
-        return extraMetadata != null ? (extraMetadata.uri || extraMetadata.id)
+        return extraMetadata != null ? (extraMetadata.uri || extraMetadata.id || extraMetadata.uriKey)
             : (location.origin + prefix + entity.entityType.defaultResourceName + "(" + _getEntityId(entity) + ")");
     }
 
@@ -334,8 +332,8 @@
                             baseType = baseType.baseEntityType;
 
                         linkRequest.data = {
-                            uri: (inseredLink.entity.entityAspect.extraMetadata ? inseredLink.entity.entityAspect.extraMetadata.id : null) ||
-                                prefix + baseType.defaultResourceName + "(" + _getEntityId(inseredLink.entity) + ")"
+                            uri: (inseredLink.entity.entityAspect.extraMetadata ? inseredLink.entity.entityAspect.extraMetadata.uriKey : null) ||
+                                baseUri + baseType.defaultResourceName + "(" + _getEntityId(inseredLink.entity) + ")"
                         };
 
                         linksRequest.push(linkRequest);
@@ -425,7 +423,7 @@
 
     function updateDeleteMergeRequest(request, aspect, baseUri, routePrefix) {
         var extraMetadata = aspect.extraMetadata;
-        var uri = extraMetadata.uri || extraMetadata.id;
+        var uri = extraMetadata.uri || extraMetadata.id || extraMetadata.uriKey;
         if (core.stringStartsWith(uri, baseUri)) {
             uri = routePrefix + uri.substring(baseUri.length);
         }
