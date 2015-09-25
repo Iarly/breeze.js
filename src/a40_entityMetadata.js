@@ -895,7 +895,12 @@ var CsdlMetadataParser = (function () {
             }
         }
         if (dp) {
-            parentType._addPropertyCore(dp);
+            if (parentType.isComplexType) {
+                parentType._addDataProperty(dp);
+            }
+            else { 
+                parentType._addPropertyCore(dp);
+            }
             addValidators(dp);
         }
         return dp;
