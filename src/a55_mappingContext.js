@@ -6,7 +6,7 @@
 
 var MappingContext = (function () {
     
-    var ctor = function (config) {
+  var ctor = function MappingContext(config) {
 
         __extend(this, config, [
             "query", "entityManager", "dataService", "mergeOptions"
@@ -25,8 +25,20 @@ var MappingContext = (function () {
     proto._$typeName = "MappingContext";
 
     proto.getUrl = function () {
-        return  this.dataService.makeUrl(this.metadataStore.toQueryString(this.query));
+    var query = this.query;
+    if (!query) {
+      throw new Error("query cannot be empty");
     }
+    var uriString;
+    if (typeof query === 'string') {
+      uriString = query;
+    } else if (query instanceof EntityQuery) {
+      uriString = this.dataService.uriBuilder.buildUri(query, this.metadataStore);
+    } else {
+      throw new Error("unable to recognize query parameter as either a string or an EntityQuery");
+    }
+    return  this.dataService.qualifyUrl(uriString);
+  }
 
     proto.visitAndMerge = function (nodes, nodeContext) {
         var query = this.query;
@@ -50,7 +62,7 @@ var MappingContext = (function () {
                 meta.entityType = query._getToEntityType && query._getToEntityType(that.metadataStore);
             }
             return processMeta(that, node, meta);
-        });
+    }, this.mergeOptions.includeDeleted);
     };
 
     proto.processDeferred = function () {
@@ -94,7 +106,8 @@ var MappingContext = (function () {
                 }
             }
         } else {
-            if (typeof node === 'object' && !__isDate(node)) {
+
+      if ((!meta.passThru) && typeof node === 'object' && !__isDate(node)) {
                 node = processAnonType(mc, node);
             }
 
@@ -147,7 +160,7 @@ var MappingContext = (function () {
         node = meta.node || node;
 
         if (meta.ignore) return;
-
+    if (meta.passThru) return node;
         if (Array.isArray(node)) {
             nodeContext.nodeType = nodeContext.nodeType + "Item";
             result[key] = node.map(function (v, ix) {
@@ -167,7 +180,9 @@ var MappingContext = (function () {
     function resolveEntityRef(mc, nodeRefId) {
         var entity = mc.refMap[nodeRefId];
         if (entity === undefined) {
-            return function () { return mc.refMap[nodeRefId]; };
+      return function () {
+        return mc.refMap[nodeRefId];
+      };
         } else {
             return entity;
         }
@@ -180,6 +195,7 @@ var MappingContext = (function () {
         }
     }
 
+  // can return null for a deleted entity if includeDeleted == false
     function mergeEntity(mc, node, meta) {
         node._$meta = meta;
         var em = mc.entityManager;
@@ -224,6 +240,9 @@ var MappingContext = (function () {
                         em._notifyStateChange(targetEntity, false);
                     }
                 } else {
+          if (targetEntityState == EntityState.Deleted && !mc.mergeOptions.includeDeleted) {
+            return null;
+          }
                     updateEntityNoMerge(mc, targetEntity, node);
                 }
             }
@@ -235,7 +254,8 @@ var MappingContext = (function () {
             if (meta.extraMetadata) {
                 targetEntity.entityAspect.extraMetadata = meta.extraMetadata;
             }
-            em._attachEntityCore(targetEntity, EntityState.Unchanged, MergeStrategy.Disallowed);
+      // em._attachEntityCore(targetEntity, EntityState.Unchanged, MergeStrategy.Disallowed);
+      em._attachEntityCore(targetEntity, EntityState.Unchanged, mergeStrategy);
             targetEntity.entityAspect.wasLoaded = true;
             em.entityChanged.publish({ entityAction: EntityAction.AttachOnQuery, entity: targetEntity });
         }
@@ -285,8 +305,7 @@ var MappingContext = (function () {
     function mergeRelatedEntities(mc, navigationProperty, targetEntity, rawEntity) {
         var relatedEntities = mergeRelatedEntitiesCore(mc, rawEntity, navigationProperty);
         if (relatedEntities == null) return;
-        // Uncomment when we implement entityAspect.isNavigationPropertyLoaded method
-        // targetEntity.entityAspect.markNavigationPropertyAsLoaded(navigationProperty);
+
         var inverseProperty = navigationProperty.inverse;
         if (!inverseProperty) return;
 
@@ -297,10 +316,10 @@ var MappingContext = (function () {
             if (typeof relatedEntity === 'function') {
                 mc.deferredFns.push(function () {
                     relatedEntity = relatedEntity();
-                    updateRelatedEntityInCollection(relatedEntity, originalRelatedEntities, targetEntity, inverseProperty);
+          updateRelatedEntityInCollection(mc, relatedEntity, originalRelatedEntities, targetEntity, inverseProperty);
                 });
             } else {
-                updateRelatedEntityInCollection(relatedEntity, originalRelatedEntities, targetEntity, inverseProperty);
+        updateRelatedEntityInCollection(mc, relatedEntity, originalRelatedEntities, targetEntity, inverseProperty);
             }
         });
     }
@@ -335,9 +354,6 @@ var MappingContext = (function () {
         var propName = navigationProperty.name;
         var currentRelatedEntity = targetEntity.getProperty(propName);
 
-        // Uncomment when we implement entityAspect.isNavigationPropertyLoaded method
-        // targetEntity.entityAspect.markNavigationPropertyAsLoaded(navigationProperty);
-
         // check if the related entity is already hooked up
         if (currentRelatedEntity !== relatedEntity) {
             // if not hook up both directions.
@@ -346,29 +362,35 @@ var MappingContext = (function () {
             if (!inverseProperty) return;
             if (inverseProperty.isScalar) {
                 relatedEntity.setProperty(inverseProperty.name, targetEntity);
-
-                // Uncomment when we implement entityAspect.isNavigationPropertyLoaded method
-                // relatedEntity.entityAspect.markNavigationPropertyAsLoaded(inverseProperty);
             } else {
                 var collection = relatedEntity.getProperty(inverseProperty.name);
                 collection.push(targetEntity);
-                // can't call _markAsLoaded here because this may be only a partial load.
+
             }
         }
     } 
 
-    function updateRelatedEntityInCollection(relatedEntity, relatedEntities, targetEntity, inverseProperty) {
+  function updateRelatedEntityInCollection(mc, relatedEntity, relatedEntities, targetEntity, inverseProperty) {
         if (!relatedEntity) return;
-        // Uncomment when we implement entityAspect.isNavigationPropertyLoaded method
-        // relatedEntity.entityAspect.markNavigationPropertyAsLoaded(inverseProperty);
+
+    // don't update relatedCollection if preserveChanges & relatedEntity has an fkChange.
+    if (relatedEntity.entityAspect.entityState === EntityState.Modified
+      && mc.mergeOptions.mergeStrategy === MergeStrategy.PreserveChanges) {
+      var origValues = relatedEntity.entityAspect.originalValues;
+      var fkWasModified = inverseProperty.relatedDataProperties.some(function(dp) {
+        return origValues[dp.name] != undefined;
+      });
+      if (fkWasModified) return;
+    }
         // check if the related entity is already hooked up
         var thisEntity = relatedEntity.getProperty(inverseProperty.name);
+
         if (thisEntity !== targetEntity) {
             // if not - hook it up.
             relatedEntities.push(relatedEntity);
             // Verify if inverse property is scalar...
             if (inverseProperty.isScalar)
-                relatedEntity.setProperty(inverseProperty.name, targetEntity);
+            relatedEntity.setProperty(inverseProperty.name, targetEntity);
                 // if is a collection is a many-to-many, push target entity...
             else {
                 var nonScalarProperty = relatedEntity.getProperty(inverseProperty.name);

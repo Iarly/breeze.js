@@ -1,5 +1,4 @@
-﻿
-breeze.makeRelationArray = (function () {
+﻿breeze.makeRelationArray = (function () {
 
     var relationArrayMixin = {};
 
@@ -8,7 +7,7 @@ breeze.makeRelationArray = (function () {
     entities associated with a navigation property on a single entity. i.e. customer.orders or order.orderDetails.
     This collection looks like an array in that the basic methods on arrays such as 'push', 'pop', 'shift', 'unshift', 'splice'
     are all provided as well as several special purpose methods. 
-    @class ↈ_relationArray_
+  @class ~relationArray
     **/
 
     /**
@@ -41,32 +40,32 @@ breeze.makeRelationArray = (function () {
     @param [errorCallback] {Function}
     @return {Promise} 
     **/
-    relationArrayMixin.load = function (callback, errorCallback) {
+  relationArrayMixin.load = function (callback, errorCallback) {
         var parent = this.parentEntity;
         var query = EntityQuery.fromEntityNavigation(this.parentEntity, this.navigationProperty);
         var em = parent.entityAspect.entityManager;
         return em.executeQuery(query, callback, errorCallback);
     };
 
-    relationArrayMixin._getEventParent = function () {
+  relationArrayMixin._getEventParent = function () {
         return this.parentEntity.entityAspect;
     };
 
-    relationArrayMixin._getPendingPubs = function () {
+  relationArrayMixin._getPendingPubs = function () {
         var em = this.parentEntity.entityAspect.entityManager;
         return em && em._pendingPubs;
     };
 
     // virtual impls 
-    relationArrayMixin._getGoodAdds = function (adds) {
+  relationArrayMixin._getGoodAdds = function (adds) {
         return getGoodAdds(this, adds);
     };
 
-    relationArrayMixin._processAdds = function (adds) {
+  relationArrayMixin._processAdds = function (adds) {
         processAdds(this, adds);
     };
 
-    relationArrayMixin._processRemoves = function (removes) {
+  relationArrayMixin._processRemoves = function (removes) {
         processRemoves(this, removes);
     };
     //
@@ -167,11 +166,11 @@ breeze.makeRelationArray = (function () {
                 });
             }
             else {
-                removes.forEach(function (childEntity) {
-                    childEntity.setProperty(inp.name, null);
-                });
-            }
+            removes.forEach(function (childEntity) {
+                childEntity.setProperty(inp.name, null);
+            });
         }
+    }
     }
 
     function checkForDups(relationArray, adds) {

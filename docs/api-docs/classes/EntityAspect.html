@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <title>EntityAspect</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.5.1/build/cssgrids/cssgrids-min.css">
-<!-- commenting out until beta goes live	<link rel="stylesheet" href="http://breezejs.com/sites/all/themes/omega/alpha/css/apha-reset.css"> 
--->    
+
 	<link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
@@ -39,27 +38,25 @@
 <div id="doc">
 <div class="header">
 <div class="logo">
-	<a href="http://www.breezejs.com/home"><img src="http://www.breezejs.com/sites/all/themes/breeze/images/breeze_large.png" /></a>
+	<a href="http://www.breezejs.com/home"><img src="http://breeze.github.io/images/logos/breeze_large.png" /></a>
 	</div>
 
     <div class="primary-nav">
 <ul>
-		
+
 		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
+			<a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
 		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
+			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
 		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
+			<a href="http://breeze.github.io/doc-js">Docs</a></li>
 		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
+			<a href="http://breeze.github.io/doc-samples/">Samples</a></li>
 		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
+			<a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
 		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-		<li>
-			<a href="http://www.breezejs.com/blog" target="_blank">Blog</a></li>				
-		
+			<a href="http://www.getbreezenow.com/blog" target="_blank">Blog</a></li>
+
 	</ul>
 </div>
 </div>
@@ -148,15 +145,15 @@
             
                 <li><a href="../classes/Validator.html">Validator</a></li>
             
-                <li><a href="../classes/ↈ_ajax_interface.html">ↈ_ajax_interface</a></li>
+                <li><a href="../classes/~ajax_interface.html">~ajax_interface</a></li>
             
-                <li><a href="../classes/ↈ_complexArray_.html">ↈ_complexArray_</a></li>
+                <li><a href="../classes/~complexArray.html">~complexArray</a></li>
             
-                <li><a href="../classes/ↈ_keyGenerator_interface.html">ↈ_keyGenerator_interface</a></li>
+                <li><a href="../classes/~keyGenerator_interface.html">~keyGenerator_interface</a></li>
             
-                <li><a href="../classes/ↈ_primitiveArray_.html">ↈ_primitiveArray_</a></li>
+                <li><a href="../classes/~primitiveArray.html">~primitiveArray</a></li>
             
-                <li><a href="../classes/ↈ_relationArray_.html">ↈ_relationArray_</a></li>
+                <li><a href="../classes/~relationArray.html">~relationArray</a></li>
             
             </ul>
 
@@ -209,7 +206,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/.._.._src_a30_entityAspect.js.html#l6"><code>..\..\src\a30_entityAspect.js:6</code></a>
+            Defined in: <a href="../files/a30_entityAspect.js.html#l6"><code>a30_entityAspect.js:6</code></a>
         </div>
     
 
@@ -231,9 +228,6 @@ that provide a variety of services including validation and change tracking.</p>
 <p>An EntityAspect will almost never need to be constructed directly. You will usually get an EntityAspect by accessing
 an entities &#39;entityAspect&#39; property.  This property will be automatically attached when an entity is created via either 
 a query, import or EntityManager.createEntity call.</p>
-<pre class="code prettyprint"><code>// assume order is an order entity attached to an EntityManager.
-var aspect = order.entityAspect;
-var currentState = aspect.entityState;</code></pre>
 
 </div>
 
@@ -301,7 +295,21 @@ var currentState = aspect.entityState;</code></pre>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_isNavigationPropertyLoaded">isNavigationPropertyLoaded</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_loadNavigationProperty">loadNavigationProperty</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_markAsLoaded">markAsLoaded</a>
 
                                 
                                 
@@ -322,6 +330,13 @@ var currentState = aspect.entityState;</code></pre>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_setAdded">setAdded</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_setDeleted">setDeleted</a>
 
                                 
@@ -330,6 +345,13 @@ var currentState = aspect.entityState;</code></pre>
                         
                             <li class="index-item method">
                                 <a href="#method_setDetached">setDetached</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setEntityState">setEntityState</a>
 
                                 
                                 
@@ -389,6 +411,13 @@ var currentState = aspect.entityState;</code></pre>
                         
                             <li class="index-item property">
                                 <a href="#property_entityState">entityState</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_extraMetadata">extraMetadata</a>
 
                                 
                                 
@@ -483,7 +512,7 @@ var currentState = aspect.entityState;</code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l187"><code>..\..\src\a30_entityAspect.js:187</code></a>
+        <a href="../files/a30_entityAspect.js.html#l247"><code>a30_entityAspect.js:247</code></a>
         
         </p>
 
@@ -494,7 +523,7 @@ var currentState = aspect.entityState;</code></pre>
     </div>
 
     <div class="description">
-        <p>Returns the entity to an <a href="..\classes\EntityState.html" class="crosslink">EntityState</a> of &#39;Unchanged&#39; by committing all changes made since the entity was last queried 
+        <p>Returns the entity to an <a href="../classes/EntityState.html" class="crosslink">EntityState</a> of &#39;Unchanged&#39; by committing all changes made since the entity was last queried 
 had &#39;acceptChanges&#39; called on it.</p>
 
     </div>
@@ -560,7 +589,7 @@ had &#39;acceptChanges&#39; called on it.</p>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l542"><code>..\..\src\a30_entityAspect.js:542</code></a>
+        <a href="../files/a30_entityAspect.js.html#l679"><code>a30_entityAspect.js:679</code></a>
         
         </p>
 
@@ -584,7 +613,7 @@ had &#39;acceptChanges&#39; called on it.</p>
                 <li class="param">
                     
                         <code class="param-name">validationError</code>
-                        <span class="type"><a href="..\classes\ValidationError.html" class="crosslink">ValidationError</a></span>
+                        <span class="type"><a href="../classes/ValidationError.html" class="crosslink">ValidationError</a></span>
                     
 
                     
@@ -638,7 +667,7 @@ had &#39;acceptChanges&#39; called on it.</p>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l568"><code>..\..\src\a30_entityAspect.js:568</code></a>
+        <a href="../files/a30_entityAspect.js.html#l705"><code>a30_entityAspect.js:705</code></a>
         
         </p>
 
@@ -680,7 +709,7 @@ had &#39;acceptChanges&#39; called on it.</p>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\EntityKey.html" class="crosslink">EntityKey</a></span>
+            <span class="type"><a href="../classes/EntityKey.html" class="crosslink">EntityKey</a></span>
         </span>
     
 
@@ -707,7 +736,7 @@ had &#39;acceptChanges&#39; called on it.</p>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l165"><code>..\..\src\a30_entityAspect.js:165</code></a>
+        <a href="../files/a30_entityAspect.js.html#l225"><code>a30_entityAspect.js:225</code></a>
         
         </p>
 
@@ -718,7 +747,7 @@ had &#39;acceptChanges&#39; called on it.</p>
     </div>
 
     <div class="description">
-        <p>Returns the <a href="..\classes\EntityKey.html" class="crosslink">EntityKey</a> for this Entity.</p>
+        <p>Returns the <a href="../classes/EntityKey.html" class="crosslink">EntityKey</a> for this Entity.</p>
 
     </div>
 
@@ -756,9 +785,9 @@ had &#39;acceptChanges&#39; called on it.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\EntityKey.html" class="crosslink">EntityKey</a></span>:
+                        <span class="type"><a href="../classes/EntityKey.html" class="crosslink">EntityKey</a></span>:
                     
-                    <p>The <a href="..\classes\EntityKey.html" class="crosslink">EntityKey</a> associated with this Entity.</p>
+                    <p>The <a href="../classes/EntityKey.html" class="crosslink">EntityKey</a> associated with this Entity.</p>
 
                 
             </div>
@@ -825,7 +854,7 @@ var entityKey = order.entityAspect.getKey();</code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l509"><code>..\..\src\a30_entityAspect.js:509</code></a>
+        <a href="../files/a30_entityAspect.js.html#l646"><code>a30_entityAspect.js:646</code></a>
         
         </p>
 
@@ -849,7 +878,7 @@ var entityKey = order.entityAspect.getKey();</code></pre>
                 <li class="param">
                     
                         <code class="param-name optional">[property]</code>
-                        <span class="type"><a href="..\classes\DataProperty.html" class="crosslink">DataProperty</a> | <a href="..\classes\NavigationProperty.html" class="crosslink">NavigationProperty</a></span>
+                        <span class="type"><a href="../classes/DataProperty.html" class="crosslink">DataProperty</a> | <a href="../classes/NavigationProperty.html" class="crosslink">NavigationProperty</a></span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
@@ -904,6 +933,111 @@ var orderDateErrors = order.entityAspect.getValidationErrors(orderDateProperty);
 </div>
 
                 
+                    <div id="method_isNavigationPropertyLoaded" class="method item">
+    <h3 class="name"><code>isNavigationPropertyLoaded</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>navigationProperty</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/a30_entityAspect.js.html#l515"><code>a30_entityAspect.js:515</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Determines whether a navigationProperty on this entity has already been loaded.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">navigationProperty</code>
+                        <span class="type"><a href="../classes/NavigationProperty.html" class="crosslink">NavigationProperty</a> | String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The NavigationProperty or name of NavigationProperty to &#39;load&#39;.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>A navigation property is considered loaded when any of the following three conditions applies:
+
+1) It was fetched from the backend server.
+a) This can be the result of an expand query or a call to the EntityAspect.loadNavigationProperty method.
+b) Note that even if the fetch returns nothing the property is still marked as loaded in this case.
+2) The property is scalar and has been set to a nonnull value.
+3) The EntityAspect.markNavigationPropertyAsLoaded was called.</code></pre>
+<pre class="code prettyprint"><code>var wasLoaded = emp.entityAspect.isNavigationPropertyLoaded(&quot;Orders&quot;);</code></pre>
+
+            </div>
+        </div>
+    
+</div>
+
+                
                     <div id="method_loadNavigationProperty" class="method item">
     <h3 class="name"><code>loadNavigationProperty</code></h3>
 
@@ -935,7 +1069,7 @@ var orderDateErrors = order.entityAspect.getValidationErrors(orderDateProperty);
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\Promise.html" class="crosslink">Promise</a></span>
+            <span class="type"><a href="../classes/Promise.html" class="crosslink">Promise</a></span>
         </span>
     
 
@@ -964,7 +1098,7 @@ var orderDateErrors = order.entityAspect.getValidationErrors(orderDateProperty);
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l372"><code>..\..\src\a30_entityAspect.js:372</code></a>
+        <a href="../files/a30_entityAspect.js.html#l464"><code>a30_entityAspect.js:464</code></a>
         
         </p>
 
@@ -975,7 +1109,7 @@ var orderDateErrors = order.entityAspect.getValidationErrors(orderDateProperty);
     </div>
 
     <div class="description">
-        <p>Performs a query for the value of a specified <a href="..\classes\NavigationProperty.html" class="crosslink">NavigationProperty</a>.</p>
+        <p>Performs a query for the value of a specified <a href="../classes/NavigationProperty.html" class="crosslink">NavigationProperty</a>.</p>
 
     </div>
 
@@ -988,7 +1122,7 @@ var orderDateErrors = order.entityAspect.getValidationErrors(orderDateProperty);
                 <li class="param">
                     
                         <code class="param-name">navigationProperty</code>
-                        <span class="type"><a href="..\classes\NavigationProperty.html" class="crosslink">NavigationProperty</a> | String</span>
+                        <span class="type"><a href="../classes/NavigationProperty.html" class="crosslink">NavigationProperty</a> | String</span>
                     
 
                     
@@ -1046,11 +1180,16 @@ var orderDateErrors = order.entityAspect.getValidationErrors(orderDateProperty);
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\Promise.html" class="crosslink">Promise</a></span>:
+                        <span class="type"><a href="../classes/Promise.html" class="crosslink">Promise</a></span>:
                     
-                    <pre><code>promiseData.results {Array of Entity}
-promiseData.query {EntityQuery} The original query
-promiseData.httpResponse {httpResponse} The HttpResponse returned from the server.</code></pre>
+                    <ul>
+<li>properties of success promise<ul>
+<li>results {Array of Entity}</li>
+<li>query {EntityQuery} The original query</li>
+<li>httpResponse {httpResponse} The HttpResponse returned from the server.</li>
+</ul>
+</li>
+</ul>
 
                 
             </div>
@@ -1062,12 +1201,111 @@ promiseData.httpResponse {httpResponse} The HttpResponse returned from the serve
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code>    emp.entityAspect.loadNavigationProperty(&quot;Orders&quot;)
-    .then(function (data) {
-        var orders = data.results;
-    }).fail(function (exception) {
-        // handle exception here;
-    });</code></pre>
+                <p>  emp.entityAspect.loadNavigationProperty(&quot;Orders&quot;).then(function (data) {
+            var orders = data.results;
+        }).fail(function (exception) {
+            // handle exception here;
+        });</p>
+
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_markAsLoaded" class="method item">
+    <h3 class="name"><code>markAsLoaded</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>navigationProperty</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag async">async</span>
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/a30_entityAspect.js.html#l501"><code>a30_entityAspect.js:501</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Marks this navigationProperty on this entity as already having been loaded.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">navigationProperty</code>
+                        <span class="type"><a href="../classes/NavigationProperty.html" class="crosslink">NavigationProperty</a> | String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The NavigationProperty or name of NavigationProperty to &#39;load&#39;.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>emp.entityAspect.markNavigationPropertyAsLoaded(&quot;Orders&quot;);</code></pre>
 
             </div>
         </div>
@@ -1107,7 +1345,7 @@ promiseData.httpResponse {httpResponse} The HttpResponse returned from the serve
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l206"><code>..\..\src\a30_entityAspect.js:206</code></a>
+        <a href="../files/a30_entityAspect.js.html#l267"><code>a30_entityAspect.js:267</code></a>
         
         </p>
 
@@ -1184,7 +1422,7 @@ had &#39;rejectChanges&#39; called on it.</p>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l554"><code>..\..\src\a30_entityAspect.js:554</code></a>
+        <a href="../files/a30_entityAspect.js.html#l691"><code>a30_entityAspect.js:691</code></a>
         
         </p>
 
@@ -1208,7 +1446,7 @@ had &#39;rejectChanges&#39; called on it.</p>
                 <li class="param">
                     
                         <code class="param-name">validationErrorOrKey</code>
-                        <span class="type"><a href="..\classes\ValidationError.html" class="crosslink">ValidationError</a> | String</span>
+                        <span class="type"><a href="../classes/ValidationError.html" class="crosslink">ValidationError</a> | String</span>
                     
 
                     
@@ -1227,6 +1465,75 @@ had &#39;rejectChanges&#39; called on it.</p>
 
     
 
+    
+</div>
+
+                
+                    <div id="method_setAdded" class="method item">
+    <h3 class="name"><code>setAdded</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/a30_entityAspect.js.html#l325"><code>a30_entityAspect.js:325</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the entity to an EntityState of &#39;Added&#39;.  This is NOT the equivalent of calling <a href="../classes/EntityManager.html#method_addEntity" class="crosslink">addEntity</a>
+because no key generation will occur for autogenerated keys as a result of this operation. As a result this operation can be problematic
+unless you are certain that the entity being marked &#39;Added&#39; does not already exist in the database and does not have an autogenerated key.
+The same operation can be performed by calling  <a href="../classes/EntityAspect.html#method_setEntityState" class="crosslink">setEntityState</a>.</p>
+
+    </div>
+
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>      // assume order is an order entity attached to an EntityManager.
+order.entityAspect.setAdded();
+// The &#39;order&#39; entity will now be in an &#39;Added&#39; state.</code></pre>
+
+            </div>
+        </div>
     
 </div>
 
@@ -1263,7 +1570,7 @@ had &#39;rejectChanges&#39; called on it.</p>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l317"><code>..\..\src\a30_entityAspect.js:317</code></a>
+        <a href="../files/a30_entityAspect.js.html#l368"><code>a30_entityAspect.js:368</code></a>
         
         </p>
 
@@ -1275,7 +1582,8 @@ had &#39;rejectChanges&#39; called on it.</p>
 
     <div class="description">
         <p>Sets the entity to an EntityState of &#39;Deleted&#39;.  This both marks the entity as being scheduled for deletion during the next &#39;Save&#39; call
-but also removes the entity from all of its related entities.</p>
+but also removes the entity from all of its related entities. 
+  The same operation can be performed by calling  <a href="../classes/EntityAspect.html#method_setEntityState" class="crosslink">setEntityState</a>.</p>
 
     </div>
 
@@ -1330,7 +1638,7 @@ order.entityAspect.setDeleted();
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l347"><code>..\..\src\a30_entityAspect.js:347</code></a>
+        <a href="../files/a30_entityAspect.js.html#l382"><code>a30_entityAspect.js:382</code></a>
         
         </p>
 
@@ -1341,7 +1649,8 @@ order.entityAspect.setDeleted();
     </div>
 
     <div class="description">
-        <p>Sets the entity to an EntityState of &#39;Detached&#39;.  This removes the entity from all of its related entities, but does NOT change the EntityState of any existing entities.</p>
+        <p>Sets the entity to an EntityState of &#39;Detached&#39;.  This removes the entity from all of its related entities, but does NOT change the EntityState of any existing entities. 
+  The same operation can be performed by calling  <a href="../classes/EntityAspect.html#method_setEntityState" class="crosslink">setEntityState</a>.</p>
 
     </div>
 
@@ -1357,6 +1666,72 @@ order.entityAspect.setDeleted();
                 <pre class="code prettyprint"><code>// assume order is an order entity attached to an EntityManager.
 order.entityAspect.setDetached();
 // The &#39;order&#39; entity will now be in a &#39;Detached&#39; state and it will no longer have any &#39;related&#39; entities. </code></pre>
+
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_setEntityState" class="method item">
+    <h3 class="name"><code>setEntityState</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/a30_entityAspect.js.html#l395"><code>a30_entityAspect.js:395</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the entity to the specified EntityState. See also &#39;setUnchanged&#39;, &#39;setModified&#39;, &#39;setDetached&#39;, etc.</p>
+
+    </div>
+
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>// assume order is an order entity attached to an EntityManager.
+order.entityAspect.setEntityState(EntityState.Unchanged);
+// The &#39;order&#39; entity will now be in a &#39;Unchanged&#39; state.</code></pre>
 
             </div>
         </div>
@@ -1396,7 +1771,7 @@ order.entityAspect.setDetached();
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l303"><code>..\..\src\a30_entityAspect.js:303</code></a>
+        <a href="../files/a30_entityAspect.js.html#l355"><code>a30_entityAspect.js:355</code></a>
         
         </p>
 
@@ -1407,7 +1782,8 @@ order.entityAspect.setDetached();
     </div>
 
     <div class="description">
-        <p>Sets the entity to an EntityState of &#39;Modified&#39;.  This can also be achieved by changing the value of any property on an &#39;Unchanged&#39; entity.</p>
+        <p>Sets the entity to an EntityState of &#39;Modified&#39;.  This can also be achieved by changing the value of any property on an &#39;Unchanged&#39; entity.
+  The same operation can be performed by calling  <a href="../classes/EntityAspect.html#method_setEntityState" class="crosslink">setEntityState</a>.</p>
 
     </div>
 
@@ -1462,7 +1838,7 @@ order.entityAspect.setModified();
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l260"><code>..\..\src\a30_entityAspect.js:260</code></a>
+        <a href="../files/a30_entityAspect.js.html#l340"><code>a30_entityAspect.js:340</code></a>
         
         </p>
 
@@ -1473,7 +1849,8 @@ order.entityAspect.setModified();
     </div>
 
     <div class="description">
-        <p>Sets the entity to an EntityState of &#39;Unchanged&#39;.  This is also the equivalent of calling <a href="..\classes\EntityAspect.html#method_acceptChanges" class="crosslink">acceptChanges</a></p>
+        <p>Sets the entity to an EntityState of &#39;Unchanged&#39;.  This is also the equivalent of calling <a href="../classes/EntityAspect.html#method_acceptChanges" class="crosslink">acceptChanges</a>.
+The same operation can be performed by calling  <a href="../classes/EntityAspect.html#method_setEntityState" class="crosslink">setEntityState</a>.</p>
 
     </div>
 
@@ -1486,9 +1863,9 @@ order.entityAspect.setModified();
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code>    // assume order is an order entity attached to an EntityManager.
-    order.entityAspect.setUnchanged();
-    // The &#39;order&#39; entity will now be in an &#39;Unchanged&#39; state with any changes committed.</code></pre>
+                <pre class="code prettyprint"><code>// assume order is an order entity attached to an EntityManager.
+      order.entityAspect.setUnchanged();
+      // The &#39;order&#39; entity will now be in an &#39;Unchanged&#39; state with any changes committed.</code></pre>
 
             </div>
         </div>
@@ -1532,7 +1909,7 @@ order.entityAspect.setModified();
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l419"><code>..\..\src\a30_entityAspect.js:419</code></a>
+        <a href="../files/a30_entityAspect.js.html#l547"><code>a30_entityAspect.js:547</code></a>
         
         </p>
 
@@ -1637,7 +2014,7 @@ if (!isOk) {
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l472"><code>..\..\src\a30_entityAspect.js:472</code></a>
+        <a href="../files/a30_entityAspect.js.html#l609"><code>a30_entityAspect.js:609</code></a>
         
         </p>
 
@@ -1664,14 +2041,14 @@ of an entity is changed.</p>
                 <li class="param">
                     
                         <code class="param-name">property</code>
-                        <span class="type"><a href="..\classes\DataProperty.html" class="crosslink">DataProperty</a> | <a href="..\classes\NavigationProperty.html" class="crosslink">NavigationProperty</a> | String</span>
+                        <span class="type"><a href="../classes/DataProperty.html" class="crosslink">DataProperty</a> | <a href="../classes/NavigationProperty.html" class="crosslink">NavigationProperty</a> | String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The <a href="..\classes\DataProperty.html" class="crosslink">DataProperty</a> or 
-<a href="..\classes\NavigationProperty.html" class="crosslink">NavigationProperty</a> to validate or a string with the name of the property or a property path with
+                        <p>The <a href="../classes/DataProperty.html" class="crosslink">DataProperty</a> or 
+<a href="../classes/NavigationProperty.html" class="crosslink">NavigationProperty</a> to validate or a string with the name of the property or a property path with
 the path to a property of a complex object.</p>
 
                     </div>
@@ -1689,7 +2066,7 @@ the path to a property of a complex object.</p>
                     
 
                     <div class="param-description">
-                        <p>A context object used to pass additional information to each  <a href="..\classes\Validator.html" class="crosslink">Validator</a></p>
+                        <p>A context object used to pass additional information to each  <a href="../classes/Validator.html" class="crosslink">Validator</a></p>
 
                     </div>
 
@@ -1764,7 +2141,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l78"><code>..\..\src\a30_entityAspect.js:78</code></a>
+        <a href="../files/a30_entityAspect.js.html#l130"><code>a30_entityAspect.js:130</code></a>
         
         </p>
 
@@ -1789,7 +2166,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
                 
                     <div id="property_entityManager" class="property item">
     <h3 class="name"><code>entityManager</code></h3>
-    <span class="type"><a href="..\classes\EntityManager.html" class="crosslink">EntityManager</a></span>
+    <span class="type"><a href="../classes/EntityManager.html" class="crosslink">EntityManager</a></span>
 
     
 
@@ -1810,7 +2187,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l85"><code>..\..\src\a30_entityAspect.js:85</code></a>
+        <a href="../files/a30_entityAspect.js.html#l137"><code>a30_entityAspect.js:137</code></a>
         
         </p>
 
@@ -1820,7 +2197,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
     </div>
 
     <div class="description">
-        <p>The <a href="..\classes\EntityManager.html" class="crosslink">EntityManager</a> that contains this entity.</p>
+        <p>The <a href="../classes/EntityManager.html" class="crosslink">EntityManager</a> that contains this entity.</p>
 <p><strong>readOnly</strong></p>
 
     </div>
@@ -1835,7 +2212,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
                 
                     <div id="property_entityState" class="property item">
     <h3 class="name"><code>entityState</code></h3>
-    <span class="type"><a href="..\classes\EntityState.html" class="crosslink">EntityState</a></span>
+    <span class="type"><a href="../classes/EntityState.html" class="crosslink">EntityState</a></span>
 
     
 
@@ -1856,7 +2233,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l92"><code>..\..\src\a30_entityAspect.js:92</code></a>
+        <a href="../files/a30_entityAspect.js.html#l144"><code>a30_entityAspect.js:144</code></a>
         
         </p>
 
@@ -1866,8 +2243,55 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
     </div>
 
     <div class="description">
-        <p>The <a href="..\classes\EntityState.html" class="crosslink">EntityState</a> of this entity.</p>
+        <p>The <a href="../classes/EntityState.html" class="crosslink">EntityState</a> of this entity.</p>
 <p><strong>readOnly</strong></p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_extraMetadata" class="property item">
+    <h3 class="name"><code>extraMetadata</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/a30_entityAspect.js.html#l151"><code>a30_entityAspect.js:151</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Extra metadata about this entity such as the entity&#39;s etag.
+You may extend this object with your own metadata information.
+Breeze (de)serializes this object when importing/exporting the entity.</p>
 
     </div>
 
@@ -1902,7 +2326,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l106"><code>..\..\src\a30_entityAspect.js:106</code></a>
+        <a href="../files/a30_entityAspect.js.html#l166"><code>a30_entityAspect.js:166</code></a>
         
         </p>
 
@@ -1948,7 +2372,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l99"><code>..\..\src\a30_entityAspect.js:99</code></a>
+        <a href="../files/a30_entityAspect.js.html#l159"><code>a30_entityAspect.js:159</code></a>
         
         </p>
 
@@ -1994,7 +2418,7 @@ var isOk = order.entityAspect.validateProperty(OrderDateProperty); </code></pre>
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l113"><code>..\..\src\a30_entityAspect.js:113</code></a>
+        <a href="../files/a30_entityAspect.js.html#l173"><code>a30_entityAspect.js:173</code></a>
         
         </p>
 
@@ -2051,7 +2475,7 @@ This is a map where the key is a property name and the value is the &#39;origina
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l121"><code>..\..\src\a30_entityAspect.js:121</code></a>
+        <a href="../files/a30_entityAspect.js.html#l181"><code>a30_entityAspect.js:181</code></a>
         
         </p>
 
@@ -2061,7 +2485,7 @@ This is a map where the key is a property name and the value is the &#39;origina
     </div>
 
     <div class="description">
-        <p>An <a href="..\classes\Event.html" class="crosslink">Event</a> that fires whenever a value of one of this entity&#39;s properties change.</p>
+        <p>An <a href="../classes/Event.html" class="crosslink">Event</a> that fires whenever a value of one of this entity&#39;s properties change.</p>
 
     </div>
 
@@ -2090,7 +2514,7 @@ This is a map where the key is a property name and the value is the &#39;origina
                 <li class="param">
                     
                         <code class="param-name">property</code>
-                        <span class="type"><a href="..\classes\DataProperty.html" class="crosslink">DataProperty</a></span>
+                        <span class="type"><a href="../classes/DataProperty.html" class="crosslink">DataProperty</a></span>
                     
 
                     
@@ -2218,7 +2642,7 @@ order.entityAspect.propertyChanged.subscribe(
             
         
         
-        <a href="../files/.._.._src_a30_entityAspect.js.html#l145"><code>..\..\src\a30_entityAspect.js:145</code></a>
+        <a href="../files/a30_entityAspect.js.html#l205"><code>a30_entityAspect.js:205</code></a>
         
         </p>
 
@@ -2228,7 +2652,7 @@ order.entityAspect.propertyChanged.subscribe(
     </div>
 
     <div class="description">
-        <p>An <a href="..\classes\Event.html" class="crosslink">Event</a> that fires whenever any of the validation errors on this entity change. 
+        <p>An <a href="../classes/Event.html" class="crosslink">Event</a> that fires whenever any of the validation errors on this entity change. 
 Note that this might be the removal of an error when some data on the entity is fixed.</p>
 
     </div>
@@ -2264,7 +2688,7 @@ Note that this might be the removal of an error when some data on the entity is 
                     
 
                     <div class="param-description">
-                        <p>An array containing any newly added <a href="..\classes\ValidationError.html" class="crosslink">ValidationError</a>s</p>
+                        <p>An array containing any newly added <a href="../classes/ValidationError.html" class="crosslink">ValidationError</a>s</p>
 
                     </div>
 
@@ -2280,7 +2704,7 @@ Note that this might be the removal of an error when some data on the entity is 
                     
 
                     <div class="param-description">
-                        <p>An array containing any newly removed <a href="..\classes\ValidationError.html" class="crosslink">ValidationError</a>s. This is those
+                        <p>An array containing any newly removed <a href="../classes/ValidationError.html" class="crosslink">ValidationError</a>s. This is those
 errors that have been &#39;fixed&#39;</p>
 
                     </div>
@@ -2325,22 +2749,20 @@ order.entityAspect.validationErrorsChanged.subscribe(
     </div>
 </div>
 <div class="primary-nav-foot">
-	<ul>
-		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
-		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
-		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
-		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
-		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
-		<li>
-			<a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Forum</a></li>
-		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-	</ul>
+  <ul>
+    <li>
+      <a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
+    <li>
+      <a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-js/">Docs</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-samples/">Samples</a></li>
+    <li>
+      <a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Questions</a></li>
+    <li>
+      <a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
+  </ul>
 </div>
 </div>
 </div>

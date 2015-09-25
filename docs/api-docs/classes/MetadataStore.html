@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <title>MetadataStore</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.5.1/build/cssgrids/cssgrids-min.css">
-<!-- commenting out until beta goes live	<link rel="stylesheet" href="http://breezejs.com/sites/all/themes/omega/alpha/css/apha-reset.css"> 
--->    
+
 	<link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
@@ -39,27 +38,25 @@
 <div id="doc">
 <div class="header">
 <div class="logo">
-	<a href="http://www.breezejs.com/home"><img src="http://www.breezejs.com/sites/all/themes/breeze/images/breeze_large.png" /></a>
+	<a href="http://www.breezejs.com/home"><img src="http://breeze.github.io/images/logos/breeze_large.png" /></a>
 	</div>
 
     <div class="primary-nav">
 <ul>
-		
+
 		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
+			<a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
 		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
+			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
 		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
+			<a href="http://breeze.github.io/doc-js">Docs</a></li>
 		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
+			<a href="http://breeze.github.io/doc-samples/">Samples</a></li>
 		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
+			<a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
 		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-		<li>
-			<a href="http://www.breezejs.com/blog" target="_blank">Blog</a></li>				
-		
+			<a href="http://www.getbreezenow.com/blog" target="_blank">Blog</a></li>
+
 	</ul>
 </div>
 </div>
@@ -148,15 +145,15 @@
             
                 <li><a href="../classes/Validator.html">Validator</a></li>
             
-                <li><a href="../classes/ↈ_ajax_interface.html">ↈ_ajax_interface</a></li>
+                <li><a href="../classes/~ajax_interface.html">~ajax_interface</a></li>
             
-                <li><a href="../classes/ↈ_complexArray_.html">ↈ_complexArray_</a></li>
+                <li><a href="../classes/~complexArray.html">~complexArray</a></li>
             
-                <li><a href="../classes/ↈ_keyGenerator_interface.html">ↈ_keyGenerator_interface</a></li>
+                <li><a href="../classes/~keyGenerator_interface.html">~keyGenerator_interface</a></li>
             
-                <li><a href="../classes/ↈ_primitiveArray_.html">ↈ_primitiveArray_</a></li>
+                <li><a href="../classes/~primitiveArray.html">~primitiveArray</a></li>
             
-                <li><a href="../classes/ↈ_relationArray_.html">ↈ_relationArray_</a></li>
+                <li><a href="../classes/~relationArray.html">~relationArray</a></li>
             
             </ul>
 
@@ -209,7 +206,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/.._.._src_a40_entityMetadata.js.html#l37"><code>..\..\src\a40_entityMetadata.js:37</code></a>
+            Defined in: <a href="../files/a40_entityMetadata.js.html#l38"><code>a40_entityMetadata.js:38</code></a>
         </div>
     
 
@@ -225,8 +222,8 @@
 
 
 <div class="box intro">
-    <p>An instance of the MetadataStore contains all of the metadata about a collection of <a href="..\classes\EntityType.html" class="crosslink">EntityType</a>&#39;s.
-MetadataStores may be shared across <a href="..\classes\EntityManager.html" class="crosslink">EntityManager</a>&#39;s.  If an EntityManager is created without an
+    <p>An instance of the MetadataStore contains all of the metadata about a collection of <a href="../classes/EntityType.html" class="crosslink">EntityType</a>&#39;s.
+MetadataStores may be shared across <a href="../classes/EntityManager.html" class="crosslink">EntityManager</a>&#39;s.  If an EntityManager is created without an
 explicit MetadataStore, the MetadataStore from the MetadataStore.defaultInstance property will be used.</p>
 
 </div>
@@ -244,6 +241,8 @@ explicit MetadataStore, the MetadataStore from the MetadataStore.defaultInstance
             <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
+        
+            <li class="api-class-tab events"><a href="#events">Events</a></li>
         
     </ul>
 
@@ -409,6 +408,21 @@ explicit MetadataStore, the MetadataStore from the MetadataStore.defaultInstance
             
 
             
+                <div class="index-section events">
+                    <h3>Events</h3>
+
+                    <ul class="index-list events">
+                        
+                            <li class="index-item event">
+                                <a href="#event_metadataFetched">metadataFetched</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
         </div>
 
         
@@ -458,7 +472,7 @@ explicit MetadataStore, the MetadataStore from the MetadataStore.defaultInstance
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l46"><code>..\..\src\a40_entityMetadata.js:46</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l47"><code>a40_entityMetadata.js:47</code></a>
         
         </p>
 
@@ -499,7 +513,7 @@ explicit MetadataStore, the MetadataStore from the MetadataStore.defaultInstance
                             <li class="param">
                                 
                                     <code class="param-name optional">[namingConvention=NamingConvention.defaultInstance]</code>
-                                    <span class="type"><a href="..\classes\NamingConvention.html" class="crosslink">NamingConvention</a></span>
+                                    <span class="type"><a href="../classes/NamingConvention.html" class="crosslink">NamingConvention</a></span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
                                 
 
@@ -515,7 +529,7 @@ between client and server. Uses the NamingConvention.defaultInstance if not spec
                             <li class="param">
                                 
                                     <code class="param-name optional">[localQueryComparisonOptions=LocalQueryComparisonOptions.defaultInstance]</code>
-                                    <span class="type"><a href="..\classes\LocalQueryComparisonOptions.html" class="crosslink">LocalQueryComparisonOptions</a></span>
+                                    <span class="type"><a href="../classes/LocalQueryComparisonOptions.html" class="crosslink">LocalQueryComparisonOptions</a></span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
                                 
 
@@ -622,7 +636,7 @@ em1.setProperties( { metadataStore: ms });</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l111"><code>..\..\src\a40_entityMetadata.js:111</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l141"><code>a40_entityMetadata.js:141</code></a>
         
         </p>
 
@@ -647,7 +661,7 @@ in the MetadataStore an exception will be thrown.</p>
                 <li class="param">
                     
                         <code class="param-name">dataService</code>
-                        <span class="type"><a href="..\classes\DataService.html" class="crosslink">DataService</a></span>
+                        <span class="type"><a href="../classes/DataService.html" class="crosslink">DataService</a></span>
                     
 
                     
@@ -729,7 +743,7 @@ in the MetadataStore an exception will be thrown.</p>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l140"><code>..\..\src\a40_entityMetadata.js:140</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l169"><code>a40_entityMetadata.js:169</code></a>
         
         </p>
 
@@ -754,7 +768,7 @@ been added to the MetadataStore.</p>
                 <li class="param">
                     
                         <code class="param-name">structuralType</code>
-                        <span class="type"><a href="..\classes\EntityType.html" class="crosslink">EntityType</a> | <a href="..\classes\ComplexType.html" class="crosslink">ComplexType</a></span>
+                        <span class="type"><a href="../classes/EntityType.html" class="crosslink">EntityType</a> | <a href="../classes/ComplexType.html" class="crosslink">ComplexType</a></span>
                     
 
                     
@@ -813,7 +827,7 @@ been added to the MetadataStore.</p>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l202"><code>..\..\src\a40_entityMetadata.js:202</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l232"><code>a40_entityMetadata.js:232</code></a>
         
         </p>
 
@@ -897,7 +911,7 @@ newMetadataStore.importMetadata(metadataFromStorage);</code></pre>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\Promise.html" class="crosslink">Promise</a></span>
+            <span class="type"><a href="../classes/Promise.html" class="crosslink">Promise</a></span>
         </span>
     
 
@@ -926,7 +940,7 @@ newMetadataStore.importMetadata(metadataFromStorage);</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l348"><code>..\..\src\a40_entityMetadata.js:348</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l378"><code>a40_entityMetadata.js:378</code></a>
         
         </p>
 
@@ -951,7 +965,7 @@ internally by an EntityManager before its first query against a new service.</p>
                 <li class="param">
                     
                         <code class="param-name">dataService</code>
-                        <span class="type"><a href="..\classes\DataService.html" class="crosslink">DataService</a> | String</span>
+                        <span class="type"><a href="../classes/DataService.html" class="crosslink">DataService</a> | String</span>
                     
 
                     
@@ -1048,7 +1062,7 @@ internally by an EntityManager before its first query against a new service.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\Promise.html" class="crosslink">Promise</a></span>:
+                        <span class="type"><a href="../classes/Promise.html" class="crosslink">Promise</a></span>:
                     
                     <p>Promise</p>
 
@@ -1066,14 +1080,12 @@ internally by an EntityManager before its first query against a new service.</p>
 ask for the metadata from the EntityManager after the fetchMetadata call returns.</p>
 <pre class="code prettyprint"><code>var ms = new MetadataStore();
 // or more commonly
-// var ms = anEntityManager.metadataStore;
-ms.fetchMetadata(&quot;breeze/NorthwindIBModel&quot;)
-.then(function(rawMetadata) {
-    // do something with the metadata
-}
-.fail(function(exception) {
-    // handle exception here
-};</code></pre>
+// var ms = anEntityManager.metadataStore;</code></pre>
+<p>  ms.fetchMetadata(&quot;breeze/NorthwindIBModel&quot;).then(function(rawMetadata) {
+        // do something with the metadata
+  }).fail(function(exception) {
+        // handle exception here
+  });</p>
 
             </div>
         </div>
@@ -1100,7 +1112,7 @@ ms.fetchMetadata(&quot;breeze/NorthwindIBModel&quot;)
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\DataService.html" class="crosslink">DataService</a></span>
+            <span class="type"><a href="../classes/DataService.html" class="crosslink">DataService</a></span>
         </span>
     
 
@@ -1127,7 +1139,7 @@ ms.fetchMetadata(&quot;breeze/NorthwindIBModel&quot;)
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l328"><code>..\..\src\a40_entityMetadata.js:328</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l358"><code>a40_entityMetadata.js:358</code></a>
         
         </p>
 
@@ -1175,7 +1187,7 @@ ms.fetchMetadata(&quot;breeze/NorthwindIBModel&quot;)
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\DataService.html" class="crosslink">DataService</a></span>:
+                        <span class="type"><a href="../classes/DataService.html" class="crosslink">DataService</a></span>:
                     
                 
             </div>
@@ -1222,7 +1234,7 @@ var adapterName = ds.adapterName; // may be null</code></pre>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\EntityType.html" class="crosslink">EntityType</a> | <a href="..\classes\ComplexType.html" class="crosslink">ComplexType</a></span>
+            <span class="type"><a href="../classes/EntityType.html" class="crosslink">EntityType</a> | <a href="../classes/ComplexType.html" class="crosslink">ComplexType</a></span>
         </span>
     
 
@@ -1249,7 +1261,7 @@ var adapterName = ds.adapterName; // may be null</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l502"><code>..\..\src\a40_entityMetadata.js:502</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l518"><code>a40_entityMetadata.js:518</code></a>
         
         </p>
 
@@ -1260,7 +1272,7 @@ var adapterName = ds.adapterName; // may be null</code></pre>
     </div>
 
     <div class="description">
-        <p>Returns an  <a href="..\classes\EntityType.html" class="crosslink">EntityType</a> or a <a href="..\classes\ComplexType.html" class="crosslink">ComplexType</a> given its name.</p>
+        <p>Returns an  <a href="../classes/EntityType.html" class="crosslink">EntityType</a> or a <a href="../classes/ComplexType.html" class="crosslink">ComplexType</a> given its name.</p>
 
     </div>
 
@@ -1315,7 +1327,7 @@ that same short name an exception will be thrown.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\EntityType.html" class="crosslink">EntityType</a> | <a href="..\classes\ComplexType.html" class="crosslink">ComplexType</a></span>:
+                        <span class="type"><a href="../classes/EntityType.html" class="crosslink">EntityType</a> | <a href="../classes/ComplexType.html" class="crosslink">ComplexType</a></span>:
                     
                     <p>The EntityType. ComplexType or &#39;undefined&#39; if not not found.</p>
 
@@ -1383,7 +1395,7 @@ var odType = em1.metadataStore.getEntityType(&quot;OrderDetail&quot;);</code></p
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l558"><code>..\..\src\a40_entityMetadata.js:558</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l573"><code>a40_entityMetadata.js:573</code></a>
         
         </p>
 
@@ -1395,7 +1407,7 @@ var odType = em1.metadataStore.getEntityType(&quot;OrderDetail&quot;);</code></p
 
     <div class="description">
         <p>Returns a fully qualified entityTypeName for a specified resource name.  The reverse of this operation
-can be obtained via the  <a href="..\classes\EntityType.html" class="crosslink">EntityType</a> &#39;defaultResourceName&#39; property</p>
+can be obtained via the  <a href="../classes/EntityType.html" class="crosslink">EntityType</a> &#39;defaultResourceName&#39; property</p>
 
     </div>
 
@@ -1439,7 +1451,7 @@ can be obtained via the  <a href="..\classes\EntityType.html" class="crosslink">
 
     
         <span class="returns-inline">
-            <span class="type">Array of EntityType | <a href="..\classes\ComplexType.html" class="crosslink">ComplexType</a></span>
+            <span class="type">Array of EntityType | <a href="../classes/ComplexType.html" class="crosslink">ComplexType</a></span>
         </span>
     
 
@@ -1466,7 +1478,7 @@ can be obtained via the  <a href="..\classes\EntityType.html" class="crosslink">
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l539"><code>..\..\src\a40_entityMetadata.js:539</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l555"><code>a40_entityMetadata.js:555</code></a>
         
         </p>
 
@@ -1477,7 +1489,7 @@ can be obtained via the  <a href="..\classes\EntityType.html" class="crosslink">
     </div>
 
     <div class="description">
-        <p>Returns an array containing all of the  <a href="..\classes\EntityType.html" class="crosslink">EntityType</a>s or <a href="..\classes\ComplexType.html" class="crosslink">ComplexType</a>s in this MetadataStore.</p>
+        <p>Returns an array containing all of the  <a href="../classes/EntityType.html" class="crosslink">EntityType</a>s or <a href="../classes/ComplexType.html" class="crosslink">ComplexType</a>s in this MetadataStore.</p>
 
     </div>
 
@@ -1490,7 +1502,7 @@ can be obtained via the  <a href="..\classes\EntityType.html" class="crosslink">
             <div class="returns-description">
                 
                     
-                        <span class="type">Array of EntityType | <a href="..\classes\ComplexType.html" class="crosslink">ComplexType</a></span>:
+                        <span class="type">Array of EntityType | <a href="../classes/ComplexType.html" class="crosslink">ComplexType</a></span>:
                     
                 
             </div>
@@ -1557,7 +1569,7 @@ var allTypes = em1.metadataStore.getEntityTypes();</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l313"><code>..\..\src\a40_entityMetadata.js:313</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l343"><code>a40_entityMetadata.js:343</code></a>
         
         </p>
 
@@ -1647,7 +1659,7 @@ if (!em1.metadataStore.hasMetadataFor(&quot;breeze/NorthwindIBModel&quot;))) {
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\MetadataStore.html" class="crosslink">MetadataStore</a></span>
+            <span class="type"><a href="../classes/MetadataStore.html" class="crosslink">MetadataStore</a></span>
         </span>
     
 
@@ -1676,7 +1688,7 @@ if (!em1.metadataStore.hasMetadataFor(&quot;breeze/NorthwindIBModel&quot;))) {
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l292"><code>..\..\src\a40_entityMetadata.js:292</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l322"><code>a40_entityMetadata.js:322</code></a>
         
         </p>
 
@@ -1724,7 +1736,7 @@ if (!em1.metadataStore.hasMetadataFor(&quot;breeze/NorthwindIBModel&quot;))) {
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\MetadataStore.html" class="crosslink">MetadataStore</a></span>:
+                        <span class="type"><a href="../classes/MetadataStore.html" class="crosslink">MetadataStore</a></span>:
                     
                     <p>A new MetadataStore.</p>
 
@@ -1776,7 +1788,7 @@ var newMetadataStore = MetadataStore.importMetadata(metadataFromStorage);</code>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\MetadataStore.html" class="crosslink">MetadataStore</a></span>
+            <span class="type"><a href="../classes/MetadataStore.html" class="crosslink">MetadataStore</a></span>
         </span>
     
 
@@ -1805,7 +1817,7 @@ var newMetadataStore = MetadataStore.importMetadata(metadataFromStorage);</code>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l229"><code>..\..\src\a40_entityMetadata.js:229</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l259"><code>a40_entityMetadata.js:259</code></a>
         
         </p>
 
@@ -1870,7 +1882,7 @@ var newMetadataStore = MetadataStore.importMetadata(metadataFromStorage);</code>
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\MetadataStore.html" class="crosslink">MetadataStore</a></span>:
+                        <span class="type"><a href="../classes/MetadataStore.html" class="crosslink">MetadataStore</a></span>:
                     
                     <p>This MetadataStore.</p>
 
@@ -1934,7 +1946,7 @@ newMetadataStore.importMetadata(metadataFromStorage);</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l488"><code>..\..\src\a40_entityMetadata.js:488</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l504"><code>a40_entityMetadata.js:504</code></a>
         
         </p>
 
@@ -2053,7 +2065,7 @@ if (em1.metadataStore.isEmpty()) {
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l429"><code>..\..\src\a40_entityMetadata.js:429</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l458"><code>a40_entityMetadata.js:458</code></a>
         
         </p>
 
@@ -2182,7 +2194,7 @@ value will be used in place of the noTracking entity.</p>
                 <li class="param">
                     
                         <code class="param-name">noTrackingFn.entityType</code>
-                        <span class="type"><a href="..\classes\EntityType.html" class="crosslink">EntityType</a></span>
+                        <span class="type"><a href="../classes/EntityType.html" class="crosslink">EntityType</a></span>
                     
 
                     
@@ -2271,7 +2283,7 @@ em1.metadataStore.registerEntityTypeCtor(&quot;Customer&quot;, Customer);
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l569"><code>..\..\src\a40_entityMetadata.js:569</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l584"><code>a40_entityMetadata.js:584</code></a>
         
         </p>
 
@@ -2313,7 +2325,7 @@ each entityType.</p>
                 <li class="param">
                     
                         <code class="param-name">entityTypeOrName</code>
-                        <span class="type"><a href="..\classes\EntityType.html" class="crosslink">EntityType</a> | String</span>
+                        <span class="type"><a href="../classes/EntityType.html" class="crosslink">EntityType</a> | String</span>
                     
 
                     
@@ -2379,7 +2391,7 @@ that same short name an exception will be thrown. If the entityType has not yet 
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l88"><code>..\..\src\a40_entityMetadata.js:88</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l118"><code>a40_entityMetadata.js:118</code></a>
         
         </p>
 
@@ -2518,7 +2530,7 @@ em1.metadataStore.setProperties( {
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l23"><code>..\..\src\a40_entityMetadata.js:23</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l22"><code>a40_entityMetadata.js:22</code></a>
         
         </p>
 
@@ -2664,7 +2676,7 @@ em1.metadataStore.setProperties( {
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l413"><code>..\..\src\a40_entityMetadata.js:413</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l442"><code>a40_entityMetadata.js:442</code></a>
         
         </p>
 
@@ -2739,7 +2751,7 @@ i.e. an unmapped type.</p>
                 
                     <div id="property_namingConvention" class="property item">
     <h3 class="name"><code>namingConvention</code></h3>
-    <span class="type"><a href="..\classes\NamingConvention.html" class="crosslink">NamingConvention</a></span>
+    <span class="type"><a href="../classes/NamingConvention.html" class="crosslink">NamingConvention</a></span>
 
     
 
@@ -2760,7 +2772,7 @@ i.e. an unmapped type.</p>
             
         
         
-        <a href="../files/.._.._src_a40_entityMetadata.js.html#l195"><code>..\..\src\a40_entityMetadata.js:195</code></a>
+        <a href="../files/a40_entityMetadata.js.html#l225"><code>a40_entityMetadata.js:225</code></a>
         
         </p>
 
@@ -2770,7 +2782,7 @@ i.e. an unmapped type.</p>
     </div>
 
     <div class="description">
-        <p>The  <a href="..\classes\NamingConvention.html" class="crosslink">NamingConvention</a> associated with this MetadataStore.</p>
+        <p>The  <a href="../classes/NamingConvention.html" class="crosslink">NamingConvention</a> associated with this MetadataStore.</p>
 <p><strong>readOnly</strong></p>
 
     </div>
@@ -2789,6 +2801,126 @@ i.e. an unmapped type.</p>
         
 
         
+            <div id="events" class="api-class-tabpanel">
+                <h2 class="off-left">Events</h2>
+
+                
+                    <div id="event_metadataFetched" class="events item">
+    <h3 class="name"><code>metadataFetched</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/a40_entityMetadata.js.html#l100"><code>a40_entityMetadata.js:100</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>An <a href="../classes/Event.html" class="crosslink">Event</a> that fires after a MetadataStore has completed fetching metadata from a remote service.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">metadataStore</code>
+                        <span class="type"><a href="../classes/MetadataStore.html" class="crosslink">MetadataStore</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The MetadataStore into which the metadata was fetched.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dataService</code>
+                        <span class="type"><a href="../classes/DataService.html" class="crosslink">DataService</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The DataService that metadata was fetched from.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">rawMetadata</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The raw metadata returned from the service. (It will have already been processed by this point).</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var ms = myEntityManager.metadataStore;
+ms.metadataFetched.subscribe(function(args) {
+        var metadataStore = args.metadataStore;
+        var dataService = args.dataService;
+    });
+});</code></pre>
+
+            </div>
+        </div>
+    
+</div>
+
+                
+            </div>
+        
     </div>
 </div>
 
@@ -2799,22 +2931,20 @@ i.e. an unmapped type.</p>
     </div>
 </div>
 <div class="primary-nav-foot">
-	<ul>
-		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
-		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
-		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
-		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
-		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
-		<li>
-			<a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Forum</a></li>
-		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-	</ul>
+  <ul>
+    <li>
+      <a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
+    <li>
+      <a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-js/">Docs</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-samples/">Samples</a></li>
+    <li>
+      <a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Questions</a></li>
+    <li>
+      <a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
+  </ul>
 </div>
 </div>
 </div>

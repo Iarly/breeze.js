@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <title>LocalQueryComparisonOptions</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.5.1/build/cssgrids/cssgrids-min.css">
-<!-- commenting out until beta goes live	<link rel="stylesheet" href="http://breezejs.com/sites/all/themes/omega/alpha/css/apha-reset.css"> 
--->    
+
 	<link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
@@ -39,27 +38,25 @@
 <div id="doc">
 <div class="header">
 <div class="logo">
-	<a href="http://www.breezejs.com/home"><img src="http://www.breezejs.com/sites/all/themes/breeze/images/breeze_large.png" /></a>
+	<a href="http://www.breezejs.com/home"><img src="http://breeze.github.io/images/logos/breeze_large.png" /></a>
 	</div>
 
     <div class="primary-nav">
 <ul>
-		
+
 		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
+			<a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
 		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
+			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
 		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
+			<a href="http://breeze.github.io/doc-js">Docs</a></li>
 		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
+			<a href="http://breeze.github.io/doc-samples/">Samples</a></li>
 		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
+			<a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
 		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-		<li>
-			<a href="http://www.breezejs.com/blog" target="_blank">Blog</a></li>				
-		
+			<a href="http://www.getbreezenow.com/blog" target="_blank">Blog</a></li>
+
 	</ul>
 </div>
 </div>
@@ -148,15 +145,15 @@
             
                 <li><a href="../classes/Validator.html">Validator</a></li>
             
-                <li><a href="../classes/ↈ_ajax_interface.html">ↈ_ajax_interface</a></li>
+                <li><a href="../classes/~ajax_interface.html">~ajax_interface</a></li>
             
-                <li><a href="../classes/ↈ_complexArray_.html">ↈ_complexArray_</a></li>
+                <li><a href="../classes/~complexArray.html">~complexArray</a></li>
             
-                <li><a href="../classes/ↈ_keyGenerator_interface.html">ↈ_keyGenerator_interface</a></li>
+                <li><a href="../classes/~keyGenerator_interface.html">~keyGenerator_interface</a></li>
             
-                <li><a href="../classes/ↈ_primitiveArray_.html">ↈ_primitiveArray_</a></li>
+                <li><a href="../classes/~primitiveArray.html">~primitiveArray</a></li>
             
-                <li><a href="../classes/ↈ_relationArray_.html">ↈ_relationArray_</a></li>
+                <li><a href="../classes/~relationArray.html">~relationArray</a></li>
             
             </ul>
 
@@ -209,7 +206,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/.._.._src_a40_localQueryComparisionOptions.js.html#l7"><code>..\..\src\a40_localQueryComparisionOptions.js:7</code></a>
+            Defined in: <a href="../files/a40_localQueryComparisionOptions.js.html#l7"><code>a40_localQueryComparisionOptions.js:7</code></a>
         </div>
     
 
@@ -225,8 +222,8 @@
 
 
 <div class="box intro">
-    <p>A LocalQueryComparisonOptions instance is used to specify the &quot;comparison rules&quot; used when performing &quot;local queries&quot; in order 
-to match the semantics of these same queries when executed against a remote service.  These options should be set based on the 
+    <p>A LocalQueryComparisonOptions instance is used to specify the &quot;comparison rules&quot; used when performing &quot;local queries&quot; in order
+to match the semantics of these same queries when executed against a remote service.  These options should be set based on the
 manner in which your remote service interprets certain comparison operations.</p>
 <p>The default LocalQueryComparisonOptions stipulates &#39;caseInsensitive&quot; queries with ANSI SQL rules regarding comparisons of unequal
 length strings.</p>
@@ -357,7 +354,7 @@ length strings.</p>
             
         
         
-        <a href="../files/.._.._src_a40_localQueryComparisionOptions.js.html#l18"><code>..\..\src\a40_localQueryComparisionOptions.js:18</code></a>
+        <a href="../files/a40_localQueryComparisionOptions.js.html#l18"><code>a40_localQueryComparisionOptions.js:18</code></a>
         
         </p>
 
@@ -430,9 +427,9 @@ length strings.</p>
                                 
 
                                 <div class="param-description">
-                                    <p>Whether of not to enforce the ANSI SQL standard 
-    of padding strings of unequal lengths before comparison with spaces. Note that per the standard, padding only occurs with equality and 
-    inequality predicates, and not with operations like &#39;startsWith&#39;, &#39;endsWith&#39; or &#39;contains&#39;.  Default is true.</p>
+                                    <p>Whether of not to enforce the ANSI SQL standard
+of padding strings of unequal lengths before comparison with spaces. Note that per the standard, padding only occurs with equality and
+inequality predicates, and not with operations like &#39;startsWith&#39;, &#39;endsWith&#39; or &#39;contains&#39;.  Default is true.</p>
 
                                 </div>
 
@@ -456,10 +453,10 @@ length strings.</p>
             <div class="example-content">
                 <pre class="code prettyprint"><code>// create a &#39;caseSensitive - non SQL&#39; instance.
 var lqco = new LocalQueryComparisonOptions({
-    name: &quot;caseSensitive-nonSQL&quot;
-    isCaseSensitive: true;
-    usesSql92CompliantStringComparison: false;
-});
+        name: &quot;caseSensitive-nonSQL&quot;
+        isCaseSensitive: true;
+        usesSql92CompliantStringComparison: false;
+    });
 // either apply it globally
 lqco.setAsDefault();
 // or to a specific MetadataStore
@@ -506,7 +503,7 @@ var em = new EntityManager( { metadataStore: ms });</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_localQueryComparisionOptions.js.html#l75"><code>..\..\src\a40_localQueryComparisionOptions.js:75</code></a>
+        <a href="../files/a40_localQueryComparisionOptions.js.html#l75"><code>a40_localQueryComparisionOptions.js:75</code></a>
         
         </p>
 
@@ -517,7 +514,7 @@ var em = new EntityManager( { metadataStore: ms });</code></pre>
     </div>
 
     <div class="description">
-        <p>Sets the &#39;defaultInstance&#39; by creating a copy of the current &#39;defaultInstance&#39; and then applying all of the properties of the current instance. 
+        <p>Sets the &#39;defaultInstance&#39; by creating a copy of the current &#39;defaultInstance&#39; and then applying all of the properties of the current instance.
 The current instance is returned unchanged.</p>
 
     </div>
@@ -534,8 +531,8 @@ The current instance is returned unchanged.</p>
                 <pre class="code prettyprint"><code>var lqco = new LocalQueryComparisonOptions({
     isCaseSensitive: false;
     usesSql92CompliantStringComparison: true;
-});
-lqco.setAsDefault();</code></pre>
+});</code></pre>
+<p>lqco.setAsDefault();</p>
 
             </div>
         </div>
@@ -553,7 +550,7 @@ lqco.setAsDefault();</code></pre>
                 
                     <div id="property_caseInsensitiveSQL" class="property item">
     <h3 class="name"><code>caseInsensitiveSQL</code></h3>
-    <span class="type"><a href="..\classes\LocalQueryComparisonOptions.html" class="crosslink">LocalQueryComparisonOptions</a></span>
+    <span class="type"><a href="../classes/LocalQueryComparisonOptions.html" class="crosslink">LocalQueryComparisonOptions</a></span>
 
     
 
@@ -576,7 +573,7 @@ lqco.setAsDefault();</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_localQueryComparisionOptions.js.html#l57"><code>..\..\src\a40_localQueryComparisionOptions.js:57</code></a>
+        <a href="../files/a40_localQueryComparisionOptions.js.html#l57"><code>a40_localQueryComparisionOptions.js:57</code></a>
         
         </p>
 
@@ -600,7 +597,7 @@ lqco.setAsDefault();</code></pre>
                 
                     <div id="property_defaultInstance" class="property item">
     <h3 class="name"><code>defaultInstance</code></h3>
-    <span class="type"><a href="..\classes\LocalQueryComparisonOptions.html" class="crosslink">LocalQueryComparisonOptions</a></span>
+    <span class="type"><a href="../classes/LocalQueryComparisonOptions.html" class="crosslink">LocalQueryComparisonOptions</a></span>
 
     
 
@@ -623,7 +620,7 @@ lqco.setAsDefault();</code></pre>
             
         
         
-        <a href="../files/.._.._src_a40_localQueryComparisionOptions.js.html#l68"><code>..\..\src\a40_localQueryComparisionOptions.js:68</code></a>
+        <a href="../files/a40_localQueryComparisionOptions.js.html#l68"><code>a40_localQueryComparisionOptions.js:68</code></a>
         
         </p>
 
@@ -661,22 +658,20 @@ lqco.setAsDefault();</code></pre>
     </div>
 </div>
 <div class="primary-nav-foot">
-	<ul>
-		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
-		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
-		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
-		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
-		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
-		<li>
-			<a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Forum</a></li>
-		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-	</ul>
+  <ul>
+    <li>
+      <a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
+    <li>
+      <a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-js/">Docs</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-samples/">Samples</a></li>
+    <li>
+      <a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Questions</a></li>
+    <li>
+      <a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
+  </ul>
 </div>
 </div>
 </div>

@@ -2,11 +2,13 @@
 *.idea
 *.user
 *.docx
+*.vs
 *.vsmdi
 *.cmd
 *.testsettings
 *.old
 *.suo
+grunt.deprecated/docs
 
 node_modules
 bin

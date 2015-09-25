@@ -1,4 +1,4 @@
-﻿// Generated on: {{generatedAt}}
+// Generated on: {{generatedAt}}
 {{#modules}}
 intellisense.annotate(breeze.{{name}}, {
 {{#classes}}
@@ -47,5 +47,3 @@ intellisense.annotate(breeze.{{../name}}.{{name}}, {
 });
 {{/classes}}
 {{/modules}}
-
-

@@ -1,40 +1,63 @@
 ﻿(function (factory) {
-    if (breeze) {
+  if (typeof breeze === "object") {
         factory(breeze);
     } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS or Node: hard-coded dependency on "breeze"
         factory(require("breeze"));
-    } else if (typeof define === "function" && define["amd"] && !breeze) {
+  } else if (typeof define === "function" && define["amd"]) {
         // AMD anonymous module with hard-coded dependency on "breeze"
         define(["breeze"], factory);
     }
 }(function (breeze) {
-    "use strict";
+    "use strict";    
     var core = breeze.core;
-
+ 
     var MetadataStore = breeze.MetadataStore;
     var JsonResultsAdapter = breeze.JsonResultsAdapter;
     var DataProperty = breeze.DataProperty;
-
+    
     var OData;
-
-    var ctor = function () {
+    
+  var ctor = function DataServiceODataAdapter() {
         this.name = "OData";
     };
 
-    var fn = ctor.prototype; // minifies better (as seen in jQuery)
+  var proto = ctor.prototype; // minifies better (as seen in jQuery)
 
-    fn.initialize = function () {
+  proto.initialize = function () {
         OData = core.requireLib("OData", "Needed to support remote OData services");
         OData.jsonHandler.recognizeDates = true;
     };
-
-
-    fn.executeQuery = function (mappingContext) {
+  // borrow from AbstractDataServiceAdapter
+  var abstractDsaProto = breeze.AbstractDataServiceAdapter.prototype;
+  proto._catchNoConnectionError = abstractDsaProto._catchNoConnectionError;
+  proto.changeRequestInterceptor = abstractDsaProto.changeRequestInterceptor;
+  proto._createChangeRequestInterceptor = abstractDsaProto._createChangeRequestInterceptor;
+  proto.headers = { "DataServiceVersion": "2.0" };
+    
+  proto.getAbsoluteUrl = function (dataService, url){
+      var serviceName = dataService.qualifyUrl( '' );
+    // only prefix with serviceName if not already on the url
+    var base = (core.stringStartsWith(url, serviceName)) ? '' : serviceName;
+    // If no protocol, turn base into an absolute URI
+    if (window && serviceName.indexOf('//') < 0) { 
+      // no protocol; make it absolute
+      base = window.location.protocol + '//' + window.location.host + 
+            (core.stringStartsWith(serviceName, '/') ? '' : '/') +
+            base;
+    }
+    return base + url;
+  };
+    
+  // getRoutePrefix deprecated in favor of getAbsoluteUrl which seems to work for all OData providers; doubt anyone ever changed it; we'll see
+  // TODO: Remove from code base soon (15 June 2015)
+  // proto.getRoutePrefix = function (dataService) { return '';}   
+    
+  proto.executeQuery = function (mappingContext) {
 
         var deferred = Q.defer();
-        var url = mappingContext.getUrl();
-
+    var url = this.getAbsoluteUrl(mappingContext.dataService, mappingContext.getUrl());
+        
         var paramSeparation = '?';
         if (url.indexOf('?') > -1)
             paramSeparation = '&';
@@ -55,7 +78,7 @@
             }
         }
 
-        var serviceUrl = mappingContext.entityManager.serviceName;
+        var serviceUrl = this.getAbsoluteUrl(mappingContext.dataService, '');
         var methodUrl = url.replace(serviceUrl, '');
 
         OData.request({
@@ -76,40 +99,35 @@
                         // OData can return data.__count as a string
                         inlineCount = parseInt(data.__count, 10);
                     }
-                    return deferred.resolve({ results: data.results, inlineCount: inlineCount });
-                }
-            }
-            return deferred.reject(createError({ response: response }, mappingContext.url));
+                    return deferred.resolve({ results: data.results, inlineCount: inlineCount, httpResponse: response });
+              }
+          }
+          return deferred.reject(createError({ response: response }, url));
         }, function (error) {
-            return deferred.reject(createError(error, mappingContext.url));
+            return deferred.reject(createError(error, url));
         }, OData.batchHandler);
         return deferred.promise;
     };
+    
 
-
-    fn.fetchMetadata = function (metadataStore, dataService) {
+  proto.fetchMetadata = function (metadataStore, dataService) {
 
         var deferred = Q.defer();
 
         var serviceName = dataService.serviceName;
-        var url = dataService.makeUrl('$metadata');
+    //var url = dataService.qualifyUrl('$metadata');
+    var url = this.getAbsoluteUrl(dataService, '$metadata');
 
         if (dataService.customMetadataUrl) {
             url = dataService.customMetadataUrl;
         }
 
-        //OData.read({
-        //    requestUri: url,
-        //    headers: {
-        //        "Accept": "application/json",
-        //    }
-        //},
-        OData.read(url,
-            function (data, response) {
-                var statusCode = response.statusCode;
-                if ((!statusCode) || statusCode == 203 || statusCode >= 400) {
-                    return deferred.reject(createError({ response: response }, url));
-                }
+        OData.read({
+          requestUri: url,
+          // headers: { "Accept": "application/json"}
+          headers: { Accept: 'application/json;odata.metadata=full' }
+        },
+        function (data, response) {
                 // data.dataServices.schema is an array of schemas. with properties of 
                 // entityContainer[], association[], entityType[], and namespace.
                 if (!data || !data.dataServices) {
@@ -129,9 +147,9 @@
                     }
                     finally {
                         if (!data || !data.dataServices) {
-                            var error = new Error("Metadata query failed for: " + url);
-                            return deferred.reject(error);
-                        }
+                    var error = new Error("Metadata query failed for: " + url);
+                    return deferred.reject(error);
+                }
                     }
                 }
                 var csdlMetadata = data.dataServices;
@@ -140,7 +158,7 @@
                 if (!metadataStore.hasMetadataFor(serviceName)) {
                     try {
                         metadataStore.importMetadata(csdlMetadata);
-                    } catch (e) {
+            } catch (e) {
                         return deferred.reject(new Error("Metadata query failed for " + url + "; Unable to process returned metadata: " + e.message));
                     }
 
@@ -161,14 +179,14 @@
 
     };
 
-    fn.getRoutePrefix = function (dataService) { return ''; /* see webApiODataCtor */ }
 
-    fn.saveChanges = function (saveContext, saveBundle) {
 
+  proto.saveChanges = function (saveContext, saveBundle) {
+    var adapter = saveContext.adapter = this;
         var deferred = Q.defer();
-
+        
         var helper = saveContext.entityManager.helper;
-        var url = saveContext.dataService.makeUrl("$batch");
+        var url = this.getAbsoluteUrl(saveContext.dataService, "$batch");
 
         var requestData = createChangeRequests(saveContext, saveBundle);
         var innerEntities = requestData.__innerEntities || [];
@@ -179,11 +197,10 @@
             return deferred.promise;
         }
 
-        var routePrefix = this.getRoutePrefix(saveContext.dataService);
-        var requestData = createChangeRequests(saveContext, saveBundle, routePrefix);
+        var requestData = createChangeRequests(saveContext, saveBundle);
         var tempKeys = saveContext.tempKeys;
         var contentKeys = saveContext.contentKeys;
-        var that = this;
+
         OData.request({
             headers: { "DataServiceVersion": "2.0" },
             requestUri: url,
@@ -197,16 +214,17 @@
             var entities = innerEntities;
             var keyMappings = [];
             var saveResult = { entities: entities, keyMappings: keyMappings };
-            data.__batchResponses.forEach(function (br) {
+      data.__batchResponses.forEach(function (br) {
                 br.__changeResponses.forEach(function (cr) {
                     var response = cr.response || cr;
                     var statusCode = response.statusCode;
                     if ((!statusCode) || statusCode >= 400) {
-                        return deferred.reject(createError(cr, url));
+                        deferred.reject(createError(cr, url));
+                        return;
                     }
-
+                    
                     var contentId = cr.headers["Content-ID"];
-
+                    
                     var rawEntity = cr.data;
                     if (rawEntity) {
                         var tempKey = tempKeys[contentId];
@@ -235,8 +253,8 @@
         return deferred.promise;
 
     };
-
-    fn.jsonResultsAdapter = new JsonResultsAdapter({
+ 
+  proto.jsonResultsAdapter = new JsonResultsAdapter({
         name: "OData_default",
 
         visitNode: function (node, mappingContext, nodeContext) {
@@ -248,17 +266,19 @@
                 var entityTypeName = MetadataStore.normalizeTypeName(metadata.type);
                 var et = entityTypeName && mappingContext.entityManager.metadataStore.getEntityType(entityTypeName, true);
 
-                result.entityType = et;
-                var baseUri = mappingContext.dataService.serviceName;
-                var uriKey = metadata.uri || metadata.id;
-                if (core.stringStartsWith(uriKey, baseUri)) {
-                    uriKey = uriKey.substring(baseUri.length);
+                    result.entityType = et;
+                    var uriKey = metadata.uri || metadata.id;
+          if (uriKey) {
+            // Strip baseUri to make uriKey a relative uri
+            // Todo: why is this necessary when absolute works for every OData source tested?
+            var re = new RegExp('^' + mappingContext.dataService.serviceName, 'i');
+            uriKey = uriKey.replace(re, '');
+                    }
+                    result.extraMetadata = {
+                        uriKey: uriKey,
+                        etag: metadata.etag
+                    }
                 }
-                result.extraMetadata = {
-                    uriKey: uriKey,
-                    etag: metadata.etag
-                }
-            }
             // OData v3 - projection arrays will be enclosed in a results array
             if (node.results) {
                 result.node = node.results;
@@ -270,10 +290,10 @@
                 (propertyName === "EntityKey" && node.$type && core.stringStartsWith(node.$type, "System.Data"));
             return result;
         }
-
+        
     });
 
-    function transformValue(prop, val) {
+  function transformValue(prop, val) {
         if (prop.isUnmapped) return undefined;
         if (prop.dataType === breeze.DataType.DateTimeOffset) {
             // The datajs lib tries to treat client dateTimes that are defined as DateTimeOffset on the server differently
@@ -300,7 +320,8 @@
             : (location.origin + prefix + entity.entityType.defaultResourceName + "(" + _getEntityId(entity) + ")");
     }
 
-    function createChangeRequests(saveContext, saveBundle, routePrefix) {
+    function createChangeRequests(saveContext, saveBundle) {
+        var changeRequestInterceptor = saveContext.adapter._createChangeRequestInterceptor(saveContext, saveBundle);
         var innerEntities = [];
         var readedAssociations = [];
         var createdCREntities = [];
@@ -312,7 +333,9 @@
         var entityManager = saveContext.entityManager;
         var helper = entityManager.helper;
         var id = 0;
-        saveBundle.entities.forEach(function (entity) {
+        var routePrefix = saveContext.routePrefix;
+
+        saveBundle.entities.forEach(function (entity, index) {
             createdCREntities.push(entity);
             var aspect = entity.entityAspect;
             id = id + 1; // we are deliberately skipping id=0 because Content-ID = 0 seems to be ignored.
@@ -383,6 +406,7 @@
             } else {
                 return;
             }
+            request = changeRequestInterceptor.getRequest(request, entity, index);
             changeRequests.push(request);
         });
 
@@ -393,6 +417,8 @@
 
         saveContext.contentKeys = contentKeys;
         saveContext.tempKeys = tempKeys;
+        changeRequestInterceptor.done(changeRequests);
+        
         return {
             __innerEntities: innerEntities,
             __batchRequests: [{
@@ -421,19 +447,47 @@
         request.requestUri = routePrefix + defaultResourceName;
     }
 
-    function updateDeleteMergeRequest(request, aspect, baseUri, routePrefix) {
+    function updateDeleteMergeRequest(request, aspect, routePrefix) {
+        var uriKey;
         var extraMetadata = aspect.extraMetadata;
-        var uri = extraMetadata.uri || extraMetadata.id || extraMetadata.uriKey;
-        if (core.stringStartsWith(uri, baseUri)) {
-            uri = routePrefix + uri.substring(baseUri.length);
-        }
-        request.requestUri = uri;
-        if (aspect.extraMetadata &&
-            aspect.extraMetadata.etag) {
+        if (extraMetadata == null) {
+          uriKey = getUriKey(aspect);
+          aspect.extraMetadata = {
+            uriKey: uriKey
+          }
+        } else {
+          uriKey = extraMetadata.uriKey;
+          if (extraMetadata.etag) {
             request.headers["If-Match"] = extraMetadata.etag;
+          }
         }
+        request.requestUri =
+          // use routePrefix if uriKey lacks protocol (i.e., relative uri)
+          uriKey.indexOf('//') > 0 ? uriKey : routePrefix + uriKey;
     }
 
+  function getUriKey(aspect) {
+    var entityType = aspect.entity.entityType;
+    var resourceName = entityType.defaultResourceName;
+    var kps = entityType.keyProperties;
+    var uriKey = resourceName + "(";
+    if (kps.length === 1) {
+      uriKey = uriKey + fmtProperty(kps[0], aspect) + ")";
+    } else {
+      var delim = "";
+      kps.forEach(function (kp) {
+        uriKey = uriKey + delim + kp.nameOnServer + "=" + fmtProperty(kp, aspect);
+        delim = ",";
+      });
+      uriKey = uriKey + ")";
+        }
+        return uriKey;
+    }
+
+    function fmtProperty(prop, aspect) {
+        return prop.dataType.fmtOData(aspect.getPropertyValue(prop.name));
+    }
+   
     function createError(error, url) {
         // OData errors can have the message buried very deeply - and nonobviously
         // this code is tricky so be careful changing the response.body parsing.
@@ -474,6 +528,7 @@
 
             }
         }
+        proto._catchNoConnectionError(result);
         return result;
     }
 
@@ -489,20 +544,49 @@
         this.name = "webApiOData";
     }
 
-    breeze.core.extend(webApiODataCtor.prototype, fn);
+  breeze.core.extend(webApiODataCtor.prototype, proto);
 
-    webApiODataCtor.prototype.getRoutePrefix = function (dataService) {
+/*
+  // Deprecated in favor of getAbsoluteUrl
+  // TODO: Remove from code base soon (15 June 2015)
+  webApiODataCtor.prototype.getRoutePrefix = function (dataService) {
         // Get the routePrefix from a Web API OData service name.
-        // Web API OData requires inclusion of the routePrefix in the Uri of a batch subrequest
-        // By convention, Breeze developers add the Web API OData routePrefix to the end of the serviceName
-        // e.g. the routePrefix in 'http://localhost:55802/odata/' is 'odata/'
-        var segments = dataService.serviceName.split('/');
-        var last = segments.length - 1;
-        var routePrefix = segments[last] || segments[last - 1];
-        routePrefix = routePrefix ? routePrefix += '/' : '';
-        return routePrefix;
+    // The routePrefix is presumed to be the pathname within the dataService.serviceName
+    // Examples of servicename -> routePrefix:
+    //   'http://localhost:55802/odata/' -> 'odata/'
+    //   'http://198.154.121.75/service/odata/' -> 'service/odata/'
+    var parser;
+    if (typeof document === 'object') { // browser
+      parser = document.createElement('a');
+      parser.href = dataService.serviceName;
+    } else { // node
+      parser = url.parse(dataService.serviceName);
+    }
+    var prefix = parser.pathname;
+    if (prefix[0] === '/') {
+      prefix = prefix.substr(1);
+    } // drop leading '/'  (all but IE)
+    if (prefix.substr(-1) !== '/') {
+      prefix += '/';
+    }      // ensure trailing '/'
+    return prefix;
     };
+  */
 
     breeze.config.registerAdapter("dataService", webApiODataCtor);
+  // OData 4 adapter
+  var webApiOData4Ctor = function () {
+    this.name = "webApiOData4";
+  }
+  breeze.core.extend(webApiOData4Ctor.prototype, webApiODataCtor.prototype);
+  webApiOData4Ctor.prototype.initialize = function () {
+    // Aargh... they moved the cheese.
+    var datajs = core.requireLib("datajs", "Needed to support remote OData v4 services");
+    OData = datajs.V4.oData;
+    OData.json.jsonHandler.recognizeDates = true;
+  };
+  webApiOData4Ctor.prototype.headers = { "OData-Version": "4.0" };
+  breeze.config.registerAdapter("dataService", webApiOData4Ctor);
+
 
 }));

@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <title>Enum</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.5.1/build/cssgrids/cssgrids-min.css">
-<!-- commenting out until beta goes live	<link rel="stylesheet" href="http://breezejs.com/sites/all/themes/omega/alpha/css/apha-reset.css"> 
--->    
+
 	<link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
@@ -39,27 +38,25 @@
 <div id="doc">
 <div class="header">
 <div class="logo">
-	<a href="http://www.breezejs.com/home"><img src="http://www.breezejs.com/sites/all/themes/breeze/images/breeze_large.png" /></a>
+	<a href="http://www.breezejs.com/home"><img src="http://breeze.github.io/images/logos/breeze_large.png" /></a>
 	</div>
 
     <div class="primary-nav">
 <ul>
-		
+
 		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
+			<a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
 		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
+			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
 		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
+			<a href="http://breeze.github.io/doc-js">Docs</a></li>
 		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
+			<a href="http://breeze.github.io/doc-samples/">Samples</a></li>
 		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
+			<a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
 		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-		<li>
-			<a href="http://www.breezejs.com/blog" target="_blank">Blog</a></li>				
-		
+			<a href="http://www.getbreezenow.com/blog" target="_blank">Blog</a></li>
+
 	</ul>
 </div>
 </div>
@@ -148,15 +145,15 @@
             
                 <li><a href="../classes/Validator.html">Validator</a></li>
             
-                <li><a href="../classes/ↈ_ajax_interface.html">ↈ_ajax_interface</a></li>
+                <li><a href="../classes/~ajax_interface.html">~ajax_interface</a></li>
             
-                <li><a href="../classes/ↈ_complexArray_.html">ↈ_complexArray_</a></li>
+                <li><a href="../classes/~complexArray.html">~complexArray</a></li>
             
-                <li><a href="../classes/ↈ_keyGenerator_interface.html">ↈ_keyGenerator_interface</a></li>
+                <li><a href="../classes/~keyGenerator_interface.html">~keyGenerator_interface</a></li>
             
-                <li><a href="../classes/ↈ_primitiveArray_.html">ↈ_primitiveArray_</a></li>
+                <li><a href="../classes/~primitiveArray.html">~primitiveArray</a></li>
             
-                <li><a href="../classes/ↈ_relationArray_.html">ↈ_relationArray_</a></li>
+                <li><a href="../classes/~relationArray.html">~relationArray</a></li>
             
             </ul>
 
@@ -209,7 +206,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/.._.._src_a05_enum.js.html#l9"><code>..\..\src\a05_enum.js:9</code></a>
+            Defined in: <a href="../files/a05_enum.js.html#l9"><code>a05_enum.js:9</code></a>
         </div>
     
 
@@ -228,38 +225,6 @@
     <p>Base class for all Breeze enumerations, such as EntityState, DataType, FetchStrategy, MergeStrategy etc.
 A Breeze Enum is a namespaced set of constant values.  Each Enum consists of a group of related constants, called &#39;symbols&#39;.
 Unlike enums in some other environments, each &#39;symbol&#39; can have both methods and properties.</p>
-<p>See the example below:</p>
-<pre class="code prettyprint"><code>// Example of creating a new Enum
-var prototype = {
-    nextDay: function () {
-        var nextIndex = (this.dayIndex+1) % 7;
-        return DayOfWeek.getSymbols()[nextIndex];
-    }
-};
-
-var DayOfWeek = new Enum(&quot;DayOfWeek&quot;, prototype);
-DayOfWeek.Monday    = DayOfWeek.addSymbol( { dayIndex: 0 });
-DayOfWeek.Tuesday   = DayOfWeek.addSymbol( { dayIndex: 1 });
-DayOfWeek.Wednesday = DayOfWeek.addSymbol( { dayIndex: 2 });
-DayOfWeek.Thursday  = DayOfWeek.addSymbol( { dayIndex: 3 });
-DayOfWeek.Friday    = DayOfWeek.addSymbol( { dayIndex: 4 });
-DayOfWeek.Saturday  = DayOfWeek.addSymbol( { dayIndex: 5, isWeekend: true });
-DayOfWeek.Sunday    = DayOfWeek.addSymbol( { dayIndex: 6, isWeekend: true });
-DayOfWeek.resolveSymbols();
-
-// custom methods
-ok(DayOfWeek.Monday.nextDay() === DayOfWeek.Tuesday);
-ok(DayOfWeek.Sunday.nextDay() === DayOfWeek.Monday);
-// custom properties
-ok(DayOfWeek.Tuesday.isWeekend === undefined);
-ok(DayOfWeek.Saturday.isWeekend == true);
-// Standard enum capabilities
-ok(DayOfWeek instanceof Enum);
-ok(Enum.isSymbol(DayOfWeek.Wednesday));
-ok(DayOfWeek.contains(DayOfWeek.Thursday));
-ok(DayOfWeek.Tuesday.parentEnum == DayOfWeek);
-ok(DayOfWeek.getSymbols().length === 7);
-ok(DayOfWeek.Friday.toString() === &quot;Friday&quot;);</code></pre>
 
 </div>
 
@@ -409,7 +374,7 @@ ok(DayOfWeek.Friday.toString() === &quot;Friday&quot;);</code></pre>
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l52"><code>..\..\src\a05_enum.js:52</code></a>
+        <a href="../files/a05_enum.js.html#l51"><code>a05_enum.js:51</code></a>
         
         </p>
 
@@ -506,7 +471,7 @@ var DayOfWeek = new Enum(&quot;DayOfWeek&quot;, prototype);</code></pre>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\EnumSymbol.html" class="crosslink">EnumSymbol</a></span>
+            <span class="type"><a href="../classes/EnumSymbol.html" class="crosslink">EnumSymbol</a></span>
         </span>
     
 
@@ -533,7 +498,7 @@ var DayOfWeek = new Enum(&quot;DayOfWeek&quot;, prototype);</code></pre>
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l108"><code>..\..\src\a05_enum.js:108</code></a>
+        <a href="../files/a05_enum.js.html#l107"><code>a05_enum.js:107</code></a>
         
         </p>
 
@@ -583,7 +548,7 @@ In other words, the &#39;propertiesObj&#39; is any state that should be held by 
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\EnumSymbol.html" class="crosslink">EnumSymbol</a></span>:
+                        <span class="type"><a href="../classes/EnumSymbol.html" class="crosslink">EnumSymbol</a></span>:
                     
                     <p>The new symbol</p>
 
@@ -652,7 +617,7 @@ DayOfWeek.Monday    = DayOfWeek.addSymbol( { dayIndex: 0 });</code></pre>
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l200"><code>..\..\src\a05_enum.js:200</code></a>
+        <a href="../files/a05_enum.js.html#l203"><code>a05_enum.js:203</code></a>
         
         </p>
 
@@ -744,7 +709,7 @@ if (DayOfWeek.contains(symbol)) {
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\EnumSymbol.html" class="crosslink">EnumSymbol</a></span>
+            <span class="type"><a href="../classes/EnumSymbol.html" class="crosslink">EnumSymbol</a></span>
         </span>
     
 
@@ -771,7 +736,7 @@ if (DayOfWeek.contains(symbol)) {
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l95"><code>..\..\src\a05_enum.js:95</code></a>
+        <a href="../files/a05_enum.js.html#l94"><code>a05_enum.js:94</code></a>
         
         </p>
 
@@ -819,7 +784,7 @@ if (DayOfWeek.contains(symbol)) {
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\EnumSymbol.html" class="crosslink">EnumSymbol</a></span>:
+                        <span class="type"><a href="../classes/EnumSymbol.html" class="crosslink">EnumSymbol</a></span>:
                     
                     <p>The symbol that matches the name or &#39;undefined&#39; if not found.</p>
 
@@ -833,8 +798,8 @@ if (DayOfWeek.contains(symbol)) {
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code> var dayOfWeek = DayOfWeek.from(&quot;Thursday&quot;);
- // nowdayOfWeek === DayOfWeek.Thursday            </code></pre>
+                <pre class="code prettyprint"><code>var dayOfWeek = DayOfWeek.from(&quot;Thursday&quot;);
+// nowdayOfWeek === DayOfWeek.Thursday</code></pre>
 
             </div>
         </div>
@@ -878,7 +843,7 @@ if (DayOfWeek.contains(symbol)) {
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l181"><code>..\..\src\a05_enum.js:181</code></a>
+        <a href="../files/a05_enum.js.html#l184"><code>a05_enum.js:184</code></a>
         
         </p>
 
@@ -960,7 +925,7 @@ if (DayOfWeek.contains(symbol)) {
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l168"><code>..\..\src\a05_enum.js:168</code></a>
+        <a href="../files/a05_enum.js.html#l171"><code>a05_enum.js:171</code></a>
         
         </p>
 
@@ -1044,7 +1009,7 @@ if (DayOfWeek.contains(symbol)) {
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l81"><code>..\..\src\a05_enum.js:81</code></a>
+        <a href="../files/a05_enum.js.html#l80"><code>a05_enum.js:80</code></a>
         
         </p>
 
@@ -1080,9 +1045,9 @@ if (DayOfWeek.contains(symbol)) {
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code> if (Enum.isSymbol(DayOfWeek.Wednesday)) {
-    // do something ...
- };</code></pre>
+                <pre class="code prettyprint"><code>if (Enum.isSymbol(DayOfWeek.Wednesday)) {
+  // do something ...
+};</code></pre>
 
             </div>
         </div>
@@ -1122,7 +1087,7 @@ if (DayOfWeek.contains(symbol)) {
             
         
         
-        <a href="../files/.._.._src_a05_enum.js.html#l130"><code>..\..\src\a05_enum.js:130</code></a>
+        <a href="../files/a05_enum.js.html#l131"><code>a05_enum.js:131</code></a>
         
         </p>
 
@@ -1173,22 +1138,20 @@ have already been added to the Enum.</p>
     </div>
 </div>
 <div class="primary-nav-foot">
-	<ul>
-		<li>
-			<a href="http://www.breezejs.com/documentation/download" target="_blank">Download</a></li>
-		<li>
-			<a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>	
-		<li>
-			<a href="http://www.breezejs.com/documentation/introduction">Docs</a></li>
-		<li>
-			<a href="http://www.breezejs.com/samples">Samples</a></li>
-		<li>
-			<a href="http://www.breezejs.com/sites/all/apidocs/index.html" target="_blank">API</a></li>
-		<li>
-			<a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Forum</a></li>
-		<li>
-			<a href="http://www.breezejs.com/support" target="_blank">Support</a></li>
-	</ul>
+  <ul>
+    <li>
+      <a href="http://breeze.github.io/doc-js/download.html" target="_blank">Download</a></li>
+    <li>
+      <a href="http://learn.breezejs.com/" target="_blank">Tutorials</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-js/">Docs</a></li>
+    <li>
+      <a href="http://breeze.github.io/doc-samples/">Samples</a></li>
+    <li>
+      <a href="http://stackoverflow.com/questions/tagged/breeze?sort=newest" target="_blank">Questions</a></li>
+    <li>
+      <a href="http://www.getbreezenow.com/support" target="_blank">Support</a></li>
+  </ul>
 </div>
 </div>
 </div>

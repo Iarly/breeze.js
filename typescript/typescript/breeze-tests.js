@@ -43,7 +43,7 @@ function test_entityAspect() {
     var orderDateErrors = order.entityAspect.getValidationErrors(orderDateProperty);
     order.entityAspect.loadNavigationProperty("Orders").then(function (data) {
         var orders = data.results;
-    }).fail(function (exception) {
+    }).catch(function (exception) {
     });
     order.entityAspect.rejectChanges();
     order.entityAspect.setDeleted();
@@ -102,7 +102,7 @@ function test_metadataStore() {
     newMetadataStore.importMetadata(metadataFromStorage);
     var ms = new breeze.MetadataStore();
     ms.fetchMetadata("breeze/NorthwindIBModel").then(function (rawMetadata) {
-    }).fail(function (exception) {
+    }).catch(function (exception) {
     });
     var odType = em1.metadataStore.getEntityType("OrderDetail");
     var badType = em1.metadataStore.getEntityType("Foo", false);
@@ -169,7 +169,7 @@ function test_entityManager() {
     var query = new breeze.EntityQuery("Orders");
     em.executeQuery(query).then(function (data) {
         var orders = data.results;
-    }).fail(function (err) {
+    }).catch(function (err) {
     });
     var em = new breeze.EntityManager(serviceName);
     var query = new breeze.EntityQuery("Orders");
@@ -181,7 +181,7 @@ function test_entityManager() {
     var query = new breeze.EntityQuery("Orders").using(em);
     query.execute().then(function (data) {
         var orders = data.results;
-    }).fail(function (err) {
+    }).catch(function (err) {
     });
     var em = new breeze.EntityManager(serviceName);
     var query = new breeze.EntityQuery("Orders");
@@ -190,7 +190,7 @@ function test_entityManager() {
     var query = new breeze.EntityQuery("Orders").using(breeze.FetchStrategy.FromLocalCache);
     em.executeQuery(query).then(function (data) {
         var orders = data.results;
-    }).fail(function (err) {
+    }).catch(function (err) {
     });
     var bundle = em1.exportEntities();
     window.localStorage.setItem("myEntityManager", bundle);
@@ -206,7 +206,7 @@ function test_entityManager() {
     var em1 = new breeze.EntityManager("breeze/NorthwindIBModel");
     em1.fetchMetadata().then(function () {
         var metadataStore = em1.metadataStore;
-    }).fail(function (exception) {
+    }).catch(function (exception) {
     });
     var employeeType = em1.metadataStore.getEntityType("Employee");
     var employeeKey = new breeze.EntityKey(employeeType, 1);
@@ -255,19 +255,19 @@ function test_entityManager() {
         metadataStore: em1.metadataStore
     });
     em2.importEntities(bundle);
-    var bundle = em1.exportEntities();
-    em2.importEntities(bundle, { mergeStrategy: breeze.MergeStrategy.PreserveChanges });
+    var bundle2 = em1.exportEntities(null, { asString: true, includeMetadata: true });
+    em2.importEntities(bundle2, { mergeStrategy: breeze.MergeStrategy.PreserveChanges });
     em.saveChanges().then(function (saveResult) {
         var savedEntities = saveResult.entities;
         var keyMappings = saveResult.keyMappings;
-    }).fail(function (e) {
+    }).catch(function (e) {
     });
     var saveOptions = new breeze.SaveOptions({ allowConcurrentSaves: true });
     var entitiesToSave;
     em.saveChanges(entitiesToSave, saveOptions).then(function (saveResult) {
         var savedEntities = saveResult.entities;
         var keyMappings = saveResult.keyMappings;
-    }).fail(function (e) {
+    }).catch(function (e) {
     });
     em.saveChanges(entitiesToSave, null, function (saveResult) {
         var savedEntities = saveResult.entities;
@@ -296,7 +296,7 @@ function test_entityQuery() {
     var em = new breeze.EntityManager(serviceName);
     var query = new breeze.EntityQuery("Orders").using(em);
     query.execute().then(function (data) {
-    }).fail(function (err) {
+    }).catch(function (err) {
     });
     var em = new breeze.EntityManager(serviceName);
     var query = new breeze.EntityQuery("Orders").using(em);
@@ -308,7 +308,7 @@ function test_entityQuery() {
     var query = new breeze.EntityQuery("Orders");
     em.executeQuery(query).then(function (data) {
         var orders = data.results;
-    }).fail(function (err) {
+    }).catch(function (err) {
     });
     var query = new breeze.EntityQuery("Orders").using(em);
     var orders = query.executeLocally();
@@ -365,6 +365,8 @@ function test_entityQuery() {
     var query = new breeze.EntityQuery("Customers").where("toLower(CompanyName)", "startsWith", "c");
     var query = new breeze.EntityQuery("Customers").where("toUpper(substring(CompanyName, 1, 2))", breeze.FilterQueryOp.Equals, "OM");
     var q2 = query.toType("foo").orderBy("foo2");
+
+    var json = query.toJSON();
 }
 
 function test_entityState() {
@@ -442,50 +444,6 @@ function test_entityType() {
     });
 }
 
-//function test_enum() {
-//    var prototype = {
-//        nextDay: function () {
-//            var nextIndex = (this.dayIndex + 1) % 7;
-//            return DayOfWeek.getSymbols()[nextIndex];
-//        }
-//    };
-//    var DayOfWeek = new core.Enum("DayOfWeek", prototype);
-//    DayOfWeek.Monday = DayOfWeek.addSymbol({ dayIndex: 0 });
-//    var symbol = DayOfWeek.Friday;
-//    if (DayOfWeek.contains(symbol)) { }
-//    var dayOfWeek = DayOfWeek.from("Thursday");
-//    var symbols = DayOfWeek.getNames();
-//    var symbols = DayOfWeek.getSymbols();
-//    if (core.Enum.isSymbol(DayOfWeek.Wednesday)) { };
-//    DayOfWeek.seal();
-//    var name = DayOfWeek.Monday.getName();
-//    var name = DayOfWeek.Monday.toString();
-//    var prototype = {
-//        nextDay: function () {
-//            var nextIndex = (this.dayIndex + 1) % 7;
-//            return DayOfWeek.getSymbols()[nextIndex];
-//        }
-//    };
-//    var DayOfWeek = new core.Enum("DayOfWeek", prototype);
-//    DayOfWeek.Monday = DayOfWeek.addSymbol({ dayIndex: 0 });
-//    DayOfWeek.Tuesday = DayOfWeek.addSymbol({ dayIndex: 1 });
-//    DayOfWeek.Wednesday = DayOfWeek.addSymbol({ dayIndex: 2 });
-//    DayOfWeek.Thursday = DayOfWeek.addSymbol({ dayIndex: 3 });
-//    DayOfWeek.Friday = DayOfWeek.addSymbol({ dayIndex: 4 });
-//    DayOfWeek.Saturday = DayOfWeek.addSymbol({ dayIndex: 5, isWeekend: true });
-//    DayOfWeek.Sunday = DayOfWeek.addSymbol({ dayIndex: 6, isWeekend: true });
-//    DayOfWeek.seal();
-//    DayOfWeek.Monday.nextDay() === DayOfWeek.Tuesday;
-//    DayOfWeek.Sunday.nextDay() === DayOfWeek.Monday;
-//    DayOfWeek.Tuesday.isWeekend === undefined;
-//    DayOfWeek.Saturday.isWeekend == true;
-//    DayOfWeek instanceof core.Enum;
-//    core.Enum.isSymbol(DayOfWeek.Wednesday);
-//    DayOfWeek.contains(DayOfWeek.Thursday);
-//    DayOfWeek.Tuesday.parentEnum == DayOfWeek;
-//    DayOfWeek.getSymbols().length === 7;
-//    DayOfWeek.Friday.toString() === "Friday";
-//}
 function test_event() {
     var myEntityManager;
     var myEntity, person;
@@ -757,6 +715,8 @@ function test_validator() {
     breeze.Validator.registerFactory(function () {
         return countryValidator;
     }, "country");
+
+    var urlValidator = breeze.Validator.url({ messageTemplate: 'u got that wrong' });
 }
 
 function test_demo() {
@@ -837,8 +797,8 @@ function test_config() {
     s = config.interfaceInitialized.type;
     o = config.interfaceRegistry;
     o = config.objectRegistry;
-    config.registerAdapter("myAdapterName");
     var f1;
+    config.registerAdapter("myAdapterName", f1);
     config.registerFunction(f1, "myFunction");
     config.registerType(f1, "myCtor");
     s = config.stringifyPad;
