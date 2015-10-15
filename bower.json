@@ -1,0 +1,22 @@
+{
+  "name": "breeze.js",
+  "version": "1.5.4",
+  "homepage": "https://github.com/Iarly/breeze.js",
+  "authors": [
+    "IdeaBlade"
+  ],
+  "description": "",
+  "main": "build\\breeze.debug.js",
+  "moduleType": [],
+  "keywords": [
+    "breeze.js"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
