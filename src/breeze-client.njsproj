@@ -49,6 +49,7 @@
     <Compile Include="b00_breeze.ajax.angular.js" />
     <Compile Include="b00_breeze.ajax.jQuery.js" />
     <Compile Include="b00_breeze.dataService.odata.js" />
+    <Compile Include="b00_breeze.dataService.odataWebApi.js" />
     <Compile Include="b00_breeze.dataService.webApi.js" />
     <Compile Include="b00_breeze.modelLibrary.backingStore.js" />
     <Compile Include="b00_breeze.modelLibrary.ko.js" />
