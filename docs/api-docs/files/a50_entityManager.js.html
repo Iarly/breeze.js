@@ -2520,61 +2520,63 @@ var EntityManager = (function () {
          * Runs through the navigation properties to fill the entity. If the entity is someone&#x27;s daughter and is new, 
          * is not generated directly and only in a relationship of another entity.
          */
-        stype.navigationProperties.forEach(function (dp) {
-            if (options.isIgnored)
-                return;
-            if (dp.isScalar) {
-                var parent = structObj.getProperty(dp.name);
-                if (parent !== null) {
-                    if (parent.entityAspect.entityState.isAdded()) {
-                        if (internalReadedAssociations.indexOf(parent) == -1) {
-                            var entity = unwrapInstance(parent, transformFn, { readedAssociations: internalReadedAssociations, isChildren: true, isIgnored: false });
-                            entity.__metadata = {
-                                type: parent.entityType.namespace + &quot;.&quot; + parent.entityType.shortName
-                            };
-                            rawObject[dp.nameOnServer] = entity;
-                        }
-                        else if (!isChildren) {
-                            options.isIgnored = true; // returns to ignore insertion of this entity, the insertion will be on association of parent.
-                        }
-                    }
-                    else {
-                        rawObject[dp.nameOnServer] = {
-                            __deferred: {
-                                uri: parent.entityAspect.extraMetadata.uriKey
-                            }
-                        };
-                    }
-                }
-            } else {
-                var children = structObj.getProperty(dp.name);
-                rawObject[dp.nameOnServer] = [];
-
-                children.map(function (child) {
-                    if (child !== null) {
-                        if (child.entityAspect.entityState.isAdded()) {
-                            if (internalReadedAssociations.indexOf(child) == -1) {
-                                var entity = unwrapInstance(child, transformFn, { readedAssociations: internalReadedAssociations, isChildren: true, isIgnored: false });
+        if (options.ignoreNavigations !== true) {
+            stype.navigationProperties.forEach(function (dp) {
+                if (options.isIgnored)
+                    return;
+                if (dp.isScalar) {
+                    var parent = structObj.getProperty(dp.name);
+                    if (parent !== null) {
+                        if (parent.entityAspect.entityState.isAdded()) {
+                            if (internalReadedAssociations.indexOf(parent) == -1) {
+                                var entity = unwrapInstance(parent, transformFn, { readedAssociations: internalReadedAssociations, isChildren: true, isIgnored: false });
                                 entity.__metadata = {
-                                    type: child.entityType.namespace + &quot;.&quot; + child.entityType.shortName
+                                    type: parent.entityType.namespace + &quot;.&quot; + parent.entityType.shortName
                                 };
-                                rawObject[dp.nameOnServer].push(entity);
+                                rawObject[dp.nameOnServer] = entity;
+                            }
+                            else if (!isChildren) {
+                                options.isIgnored = true; // returns to ignore insertion of this entity, the insertion will be on association of parent.
                             }
                         }
                         else {
-                            rawObject[dp.nameOnServer].push({
-                                __metadata: {
-                                    uri: child.entityAspect.extraMetadata.uriKey,
-                                    content_type: child.entityAspect.extraMetadata.type
+                            rawObject[dp.nameOnServer] = {
+                                __deferred: {
+                                    uri: parent.entityAspect.extraMetadata.uriKey
                                 }
-                            });
+                            };
                         }
                     }
-                });
+                } else {
+                    var children = structObj.getProperty(dp.name);
+                    rawObject[dp.nameOnServer] = [];
 
-            }
-        });
-        
+                    children.map(function (child) {
+                        if (child !== null) {
+                            if (child.entityAspect.entityState.isAdded()) {
+                                if (internalReadedAssociations.indexOf(child) == -1) {
+                                    var entity = unwrapInstance(child, transformFn, { readedAssociations: internalReadedAssociations, isChildren: true, isIgnored: false });
+                                    entity.__metadata = {
+                                        type: child.entityType.namespace + &quot;.&quot; + child.entityType.shortName
+                                    };
+                                    rawObject[dp.nameOnServer].push(entity);
+                                }
+                            }
+                            else {
+                                rawObject[dp.nameOnServer].push({
+                                    __metadata: {
+                                        uri: child.entityAspect.extraMetadata.uriKey,
+                                        content_type: child.entityAspect.extraMetadata.type
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
+
         if (!__isEmpty(unmapped))
             rawObject.__unmapped = unmapped;
         if (!options.isIgnored) {
