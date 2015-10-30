@@ -846,7 +846,8 @@ var EntityAspect = (function () {
                         if (inverseNp.isScalar) {
                             // Verify if child entity of a deleted entity has a required navigation property 
                             // then set child as detached to pass responsibility to server..
-                            var property = inverseNp.relatedDataProperties[0];
+                            var property = inverseNp.relatedDataProperties ? 
+                                inverseNp.relatedDataProperties[0] : null;
                             if (property && !property.isNullable) {
                                 npValue.entityAspect.setDetached();
                             } else {
@@ -868,7 +869,8 @@ var EntityAspect = (function () {
                         if (inverseNp.isScalar) {
                             // Verify if child entity of a deleted entity has a required navigation property 
                             // then set child as detached to pass responsibility to server..
-                            var property = inverseNp.relatedDataProperties[0];
+                            var property = inverseNp.relatedDataProperties ? 
+                                inverseNp.relatedDataProperties[0] : null;
                             if (property && !property.isNullable) {
                                 v.entityAspect.setDetached();
                             } else {

@@ -4306,7 +4306,8 @@ var EntityAspect = (function () {
                         if (inverseNp.isScalar) {
                             // Verify if child entity of a deleted entity has a required navigation property 
                             // then set child as detached to pass responsibility to server..
-                            var property = inverseNp.relatedDataProperties[0];
+                            var property = inverseNp.relatedDataProperties ? 
+                                inverseNp.relatedDataProperties[0] : null;
                             if (property && !property.isNullable) {
                                 npValue.entityAspect.setDetached();
                             } else {
@@ -4328,7 +4329,8 @@ var EntityAspect = (function () {
                         if (inverseNp.isScalar) {
                             // Verify if child entity of a deleted entity has a required navigation property 
                             // then set child as detached to pass responsibility to server..
-                            var property = inverseNp.relatedDataProperties[0];
+                            var property = inverseNp.relatedDataProperties ? 
+                                inverseNp.relatedDataProperties[0] : null;
                             if (property && !property.isNullable) {
                                 v.entityAspect.setDetached();
                             } else {
@@ -8101,15 +8103,18 @@ var EntityType = (function () {
     var props = propertyNames.map(function (propName) {
       var prop = __arrayFirst(parentType.getProperties(), __propEq(key, propName));
             if (prop) {
-        parentType = prop.isNavigationProperty ? prop.entityType : prop.dataType;
+                parentType = prop.isNavigationProperty ? prop.entityType : prop.dataType;
             } else if (throwIfNotFound) {
-        throw new Error("unable to locate property: " + propName + " on entityType: " + parentType.name);
+                prop = { nameOnServer: propName };
+                //throw new Error("unable to locate property: " + propName + " on entityType: " + parentType.name);
             } else {
-        ok = false;
+                ok = false;
             }
       return prop;
     });
-    return ok ? props : null;
+    return ok ? props.filter(function (prop) {
+                return prop != null;
+            }) : null;
                 }
 
   proto.clientPropertyPathToServer = function(propertyPath, delimiter) {
