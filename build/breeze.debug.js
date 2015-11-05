@@ -5066,13 +5066,22 @@ breeze.EntityState = EntityState;
         var navProp = relationArray.navigationProperty;
         var inverseProp = navProp.inverse;
         var goodAdds;
-        if (inverseProp) {
+        if (inverseProp && inverseProp.isScalar) {
             goodAdds = adds.filter(function (a) {
                 if (relationArray._addsInProcess.indexOf(a) >= 0) {
                     return false;
                 }
                 var inverseValue = a.getProperty(inverseProp.name);
                 return inverseValue !== parentEntity;
+            });
+        }
+        else if (inverseProp && !inverseProp.isScalar) {
+            goodAdds = adds.filter(function (a) {
+                if (relationArray._addsInProcess.indexOf(a) >= 0) {
+                    return false;
+                }
+                var inverseValue = a.getProperty(inverseProp.name);
+                return inverseValue.indexOf(parentEntity) === -1 && relationArray.indexOf(a) === -1 ;
             });
         } else {
             // This occurs with a unidirectional 1->N relation ( where there is no n -> 1)

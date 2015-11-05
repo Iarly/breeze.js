@@ -383,13 +383,22 @@
         var navProp = relationArray.navigationProperty;
         var inverseProp = navProp.inverse;
         var goodAdds;
-        if (inverseProp) {
+        if (inverseProp &amp;&amp; inverseProp.isScalar) {
             goodAdds = adds.filter(function (a) {
                 if (relationArray._addsInProcess.indexOf(a) &gt;= 0) {
                     return false;
                 }
                 var inverseValue = a.getProperty(inverseProp.name);
                 return inverseValue !== parentEntity;
+            });
+        }
+        else if (inverseProp &amp;&amp; !inverseProp.isScalar) {
+            goodAdds = adds.filter(function (a) {
+                if (relationArray._addsInProcess.indexOf(a) &gt;= 0) {
+                    return false;
+                }
+                var inverseValue = a.getProperty(inverseProp.name);
+                return inverseValue.indexOf(parentEntity) === -1 &amp;&amp; relationArray.indexOf(a) === -1 ;
             });
         } else {
             // This occurs with a unidirectional 1-&gt;N relation ( where there is no n -&gt; 1)
