@@ -194,7 +194,10 @@
                     return false;
                 }
                 var inverseValue = a.getProperty(inverseProp.name);
-                return inverseValue.indexOf(parentEntity) === -1 && relationArray.indexOf(a) === -1 ;
+                if (inverseValue._addsInProcess.indexOf(a) >= 0) {
+                    return false;
+                }
+                return /*inverseValue.indexOf(parentEntity) === -1 && */relationArray.indexOf(a) === -1 ;
             });
         } else {
             // This occurs with a unidirectional 1->N relation ( where there is no n -> 1)

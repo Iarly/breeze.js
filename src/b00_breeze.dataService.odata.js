@@ -463,7 +463,7 @@
         }
         request.requestUri =
           // use routePrefix if uriKey lacks protocol (i.e., relative uri)
-          uriKey.indexOf('//') > 0 ? uriKey : routePrefix + uriKey;
+          uriKey.indexOf('//') > 0 ? uriKey : routePrefix + (uriKey.indexOf('/')==0 ? uriKey.substring(1) : uriKey);
     }
 
   function getUriKey(aspect) {
