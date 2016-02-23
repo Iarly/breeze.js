@@ -268,6 +268,14 @@
             var result = {};
             if (node == null) return result;
             var metadata = node.__metadata;
+            
+            if (!metadata && node["odata.id"] && node["odata.type"]) {
+                metadata = {
+                    id: node["odata.id"],
+                    type: node ["odata.type"]
+                };
+            }
+            
             if (metadata != null) {
                 // TODO: may be able to make this more efficient by caching of the previous value.
                 var entityTypeName = MetadataStore.normalizeTypeName(metadata.type);
