@@ -849,9 +849,10 @@ var EntityAspect = (function () {
                             var property = inverseNp.relatedDataProperties ? 
                                 inverseNp.relatedDataProperties[0] : null;
                             if (property && !property.isNullable) {
-                                npValue.entityAspect.setDetached();
+                                if (!npValue.entityAspect.entityState.isDeleted())
+                                    npValue.entityAspect.setDetached();
                             } else {
-                            npValue.setProperty(inverseNp.name, null);
+                                npValue.setProperty(inverseNp.name, null);
                             }
                         } else {
                             var collection = npValue.getProperty(inverseNp.name);
@@ -872,9 +873,10 @@ var EntityAspect = (function () {
                             var property = inverseNp.relatedDataProperties ? 
                                 inverseNp.relatedDataProperties[0] : null;
                             if (property && !property.isNullable) {
-                                v.entityAspect.setDetached();
+                                if (!v.entityAspect.entityState.isDeleted())
+                                    v.entityAspect.setDetached();   
                             } else {
-                            v.setProperty(inverseNp.name, null);
+                                v.setProperty(inverseNp.name, null);
                             }
                         } else {
                             // TODO: many to many - not yet handled.

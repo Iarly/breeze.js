@@ -339,7 +339,7 @@
             createdCREntities.push(entity);
             var aspect = entity.entityAspect;
             id = id + 1; // we are deliberately skipping id=0 because Content-ID = 0 seems to be ignored.
-            var request = { headers: { "Content-ID": id, "DataServiceVersion": "2.0" } };
+            var request = { headers: { "Content-ID": id, "DataServiceVersion": "3.0" } };
             contentKeys[id] = entity;
 
             if (entity.entityAspect.entityState.isModified()) {
@@ -384,22 +384,24 @@
                 request.method = "POST";
                 request.data = helper.unwrapInstance(entity, transformValue, options);
                 tempKeys[id] = aspect.getKey();
-                // should be a PATCH/MERGE
                 if (options.isIgnored || Object.keys(request.data).length == 0) {
                     innerEntities.push(entity);
                     id--;
                     return;
                 }
+                request.data["__metadata"] = request.data["__metadata"] || {};
+                request.data["__metadata"]["type"] = entity.entityType.namespace + '.' + entity.entityType.shortName;
             } else if (aspect.entityState.isModified()) {
                 updateDeleteMergeRequest(request, aspect, baseUri, routePrefix);
                 request.method = "MERGE";
                 request.data = helper.unwrapChangedValues(entity, entityManager.metadataStore, transformValue);
-                // should be a PATCH/MERGE
                 if (Object.keys(request.data).length == 0) {
                     innerEntities.push(entity);
                     id--;
                     return;
                 }
+                request.data["__metadata"] = request.data["__metadata"] || {};
+                request.data["__metadata"]["type"] = entity.entityType.namespace + '.' + entity.entityType.shortName;
             } else if (aspect.entityState.isDeleted()) {
                 updateDeleteMergeRequest(request, aspect, baseUri, routePrefix);
                 request.method = "DELETE";
@@ -448,8 +450,9 @@
     }
 
     function updateDeleteMergeRequest(request, aspect, routePrefix) {
-        var uriKey;
-        var extraMetadata = aspect.extraMetadata;
+        var uriKey,
+            extraMetadata = aspect.extraMetadata;
+
         if (extraMetadata == null) {
           uriKey = getUriKey(aspect);
           aspect.extraMetadata = {
@@ -461,9 +464,11 @@
             request.headers["If-Match"] = extraMetadata.etag;
           }
         }
-        request.requestUri =
-          // use routePrefix if uriKey lacks protocol (i.e., relative uri)
-          uriKey.indexOf('//') > 0 ? uriKey : routePrefix + (uriKey.indexOf('/')==0 ? uriKey.substring(1) : uriKey);
+        
+        request.requestUri = uriKey;
+        //request.requestUri =
+        //  // use routePrefix if uriKey lacks protocol (i.e., relative uri)
+        //  uriKey.indexOf('//') > 0 ? uriKey : routePrefix + (uriKey.indexOf('/')==0 ? uriKey.substring(1) : uriKey);
     }
 
   function getUriKey(aspect) {
