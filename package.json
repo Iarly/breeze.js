@@ -1,0 +1,23 @@
+{
+  "name": "breeze.js",
+  "version": "1.0.0",
+  "description": "This repository holds the Breeze assets **for HTML/JS client development**.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Iarly/breeze.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Iarly/breeze.js/issues"
+  },
+  "homepage": "https://github.com/Iarly/breeze.js"
+}
