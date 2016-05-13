@@ -68,9 +68,19 @@
             OData.request({ requestUri: serviceUrl + methodUrl, method: "POST", data: mappingContext.query.parameters },
                 function (batchData, response) {
                 if (response.statusCode == 200) {
-                    response = JSON.parse(response.body);
-                    var data = response.value;
+                    var data = response.data ? response.data.results : null;
+                    if (!data) {
+                        response = JSON.parse(response.body);
+                        data = response.value || response.d;
+                    }
                     var inlineCount;
+                    if (response["odata.count"]) {
+                        inlineCount = parseInt(response["odata.count"], 10);
+                    }
+                    if (response.data && response.data.__count) {
+                        // OData can return data.__count as a string
+                        inlineCount = parseInt(response.data.__count, 10);
+                    }
                     if (data.__count) {
                         // OData can return data.__count as a string
                         inlineCount = parseInt(data.__count, 10);
