@@ -2269,7 +2269,28 @@ var EntityManager = (function () {
         unwrapOriginalValues: unwrapOriginalValues,
         unwrapChangedValues: unwrapChangedValues,
     };
+
+    function fmtProperty(prop, aspect) {
+        return prop.dataType.fmtOData(aspect.getPropertyValue(prop.name));
+    }
     
+    function getUriKey(aspect) {
+        var entityType = aspect.entity.entityType;
+        var resourceName = entityType.defaultResourceName;
+        var kps = entityType.keyProperties;
+        var uriKey = resourceName + "(";
+        if ( kps.length === 1 ) {
+            uriKey = uriKey + fmtProperty( kps[0], aspect ) + ")";
+        } else {
+            var delim = "";
+            kps.forEach( function ( kp ) {
+                uriKey = uriKey + delim + kp.nameOnServer + "=" + fmtProperty( kp, aspect );
+                delim = ",";
+            });
+            uriKey = uriKey + ")";
+        }
+        return uriKey;
+    }
    
     function unwrapInstance(structObj, transformFn, options) {
         
@@ -2338,7 +2359,9 @@ var EntityManager = (function () {
                         else {
                             rawObject[dp.nameOnServer] = {
                                 __deferred: {
-                                    uri: parent.entityAspect.extraMetadata.uriKey
+                                    uri: parent.entityAspect.extraMetadata 
+                                        ? parent.entityAspect.extraMetadata.uriKey
+                                        : getUriKey(parent.entityAspect)
                                 }
                             };
                         }
@@ -2361,8 +2384,12 @@ var EntityManager = (function () {
                             else {
                                 rawObject[dp.nameOnServer].push({
                                     __metadata: {
-                                        uri: child.entityAspect.extraMetadata.uriKey,
-                                        content_type: child.entityAspect.extraMetadata.type
+                                        uri: child.entityAspect.extraMetadata 
+                                            ? child.entityAspect.extraMetadata.uriKey
+                                            : getUriKey(parent.entityAspect),
+                                        content_type: child.entityAspect.extraMetadata 
+                                            ? child.entityAspect.extraMetadata.type
+                                            : undefined
                                     }
                                 });
                             }

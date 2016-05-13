@@ -706,23 +706,26 @@ var MetadataStore = (function () {
     }
 
   function completeStructuralTypeFromJson(metadataStore, json, stype) {
-
-    // validators from baseType work because validation walks thru base types
-    // so no need to copy down.
+        // validators from baseType work because validation walks thru base types
+        // so no need to copy down.
         if (json.validators) {
             stype.validators = json.validators.map(Validator.fromJSON);
         }
-
             
-    json.dataProperties.forEach(function (dp) {
-            stype._addPropertyCore(DataProperty.fromJSON(dp));
-        });
-        
+        json.dataProperties.forEach(function (dp) {
+            dp = DataProperty.fromJSON(dp);
+            if (stype.isComplexType) {
+                stype._addDataProperty(dp);
+            }
+            else {
+                stype._addPropertyCore(dp);
+            }
+        });        
         
         var isEntityType = !json.isComplexType;
         if (isEntityType) {
             //noinspection JSHint
-      json.navigationProperties && json.navigationProperties.forEach(function (np) {
+            json.navigationProperties && json.navigationProperties.forEach(function (np) {
                 stype._addPropertyCore(NavigationProperty.fromJSON(np));
             });
         }
